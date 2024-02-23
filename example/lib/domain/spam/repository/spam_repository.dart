@@ -1,5 +1,8 @@
 import 'package:dor_gen/annotations.dart';
+import 'package:example/domain/spam/model/cat.dart';
 import 'package:example/domain/spam/model/egg.dart';
+import 'package:example/domain/spam/model/plant.dart';
+import 'package:example/domain/spam/model/zombie.dart';
 
 @DorGenerator()
 abstract class SpamRepository {
@@ -14,5 +17,20 @@ abstract class SpamRepository {
   @DorConfig(generateUseCase: false)
   void doNothing();
 
-  void setEgg({required Egg newEgg});
+  Future<List<String>> setEgg({required Egg newEgg});
+  Future<void> setEgg2({required Egg newEgg});
+
+  void setLotEggs({
+    required List<Plant> newEggs,
+    required Future<List<Zombie<Cat>>> newEggsFuture,
+  });
+
+  Egg getEgg();
+  Egg getEgg2();
+
+  Plant getPlant();
+
+  Zombie<Cat> getZombieWithCast();
+
+  Future<List<Zombie<List<Cat>>>> getLotsZombiesWithCats();
 }

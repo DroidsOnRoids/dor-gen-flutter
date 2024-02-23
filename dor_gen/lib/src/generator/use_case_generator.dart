@@ -2,26 +2,29 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:dor_gen/src/annotations/dor_config_annotation.dart';
 import 'package:dor_gen/src/annotations/dor_generator_annotation.dart';
+import 'package:dor_gen/src/utils/code_builder.dart';
 import 'package:dor_gen/src/utils/const_string.dart';
 import 'package:dor_gen/src/utils/errors.dart';
-import 'package:dor_gen/src/utils/formatters.dart';
+import 'package:dor_gen/src/utils/import_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
 const TypeChecker _DorConfigChecker = TypeChecker.fromRuntime(DorConfig);
 
 class UseCasesGenerator extends GeneratorForAnnotation<DorGenerator> {
+  ImportBuilder _importBuilder = ImportBuilder();
+
   @override
   String generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-    print('Start generator for ${element.name}');
     final buffer = StringBuffer();
-    buffer.writeln('// UseCases for ${element.name};');
+
+    _importBuilder.addToImports('// UseCases for ${element.name};');
 
     if (_shouldGenerateUseCases(annotation)) {
-      _imports(buffer: buffer, element: element);
+      _addStandardImportForUseCases(element: element);
 
       //generate use cases
       for (final method in element.children) {
@@ -34,17 +37,21 @@ class UseCasesGenerator extends GeneratorForAnnotation<DorGenerator> {
         }
       }
     }
-    return buffer.toString();
+
+    StringBuffer result = StringBuffer();
+    StringBuffer importBuffer = StringBuffer();
+    _importBuilder.addImportsToBuffer(importBuffer);
+    _importBuilder.clearImports();
+    result.write(importBuffer);
+    result.write(buffer);
+    return result.toString();
   }
 
-  void _imports({
-    required StringBuffer buffer,
+  void _addStandardImportForUseCases({
     required Element element,
   }) {
-    buffer.writeln(Formatters.import('package:injectable/injectable.dart'));
-    buffer.writeln(Formatters.import(element.source!.shortName));
-    //TODO add imports for custom classes
-    buffer.writeln('');
+    _importBuilder.addToImports(CodeBuilder.import('package:injectable/injectable.dart'));
+    _importBuilder.addToImports(CodeBuilder.import(element.source!.shortName));
   }
 
   bool _shouldGenerateUseCases(ConstantReader annotation) =>
@@ -63,14 +70,16 @@ class UseCasesGenerator extends GeneratorForAnnotation<DorGenerator> {
     required MethodElement method,
     required Element element,
   }) {
-    final useCaseName = Formatters.createUseCaseNameFromMethod(method);
-    final defineParameters = _buildDefineParametersList(method);
-    final parameters = _buildParameters(method);
+    final useCaseName = CodeBuilder.createUseCaseNameFromMethod(method);
+    final defineParameters = _buildDefineParametersListAndAddImportOfParametersType(method: method);
+    final parameters = _buildParametersAsArguments(method);
+    _importBuilder.recursionImportsOfDartTypes(type: method.returnType);
+
     buffer.writeln('@injectable');
     buffer.writeln('class $useCaseName {');
     buffer.writeln('  final ${element.name} _repository;');
     buffer.writeln('');
-    buffer.writeln('  $useCaseName(this._repository);');
+    buffer.writeln('  const $useCaseName(this._repository);');
     buffer.writeln('');
     buffer.writeln(' ${method.returnType} call(');
     if (defineParameters.isNotEmpty) {
@@ -87,34 +96,30 @@ class UseCasesGenerator extends GeneratorForAnnotation<DorGenerator> {
     buffer.writeln('}');
   }
 
-  String _buildDefineParametersList(MethodElement method) {
+  String _buildDefineParametersListAndAddImportOfParametersType({required MethodElement method}) {
     String parameters = '';
     if (method.parameters.isNotEmpty) {
       for (final parameter in method.parameters) {
         if (!parameter.isNamed) {
           throw UnnamedParameterError(method.name);
         }
-
-        print('siemaaa :${parameter.type.element?.source.toString()}');
+        _importBuilder.recursionImportsOfDartTypes(type: parameter.type);
 
         if (parameter.isRequired) {
-          parameters += '''      required ${parameter.type} ${parameter.name},
-''';
+          parameters += '      required ${parameter.type} ${parameter.name},${ConstString.newline}';
         } else {
-          parameters += '''      ${parameter.type} ${parameter.name},
-''';
+          parameters += '      ${parameter.type} ${parameter.name},${ConstString.newline}';
         }
       }
     }
     return parameters;
   }
 
-  String _buildParameters(MethodElement method) {
+  String _buildParametersAsArguments(MethodElement method) {
     String parameters = '';
     if (method.parameters.isNotEmpty) {
       for (final parameter in method.parameters) {
-        parameters += '''      ${parameter.name}: ${parameter.name},
-''';
+        parameters += '      ${parameter.name}: ${parameter.name},${ConstString.newline}';
       }
     }
     return parameters;

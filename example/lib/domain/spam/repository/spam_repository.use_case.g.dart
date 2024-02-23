@@ -13,12 +13,16 @@
 // UseCases for SpamRepository;
 import 'package:injectable/injectable.dart';
 import 'spam_repository.dart';
+import 'package:example/domain/spam/model/egg.dart';
+import 'package:example/domain/spam/model/plant.dart';
+import 'package:example/domain/spam/model/zombie.dart';
+import 'package:example/domain/spam/model/cat.dart';
 
 @injectable
 class DoSomethingUseCase {
   final SpamRepository _repository;
 
-  DoSomethingUseCase(this._repository);
+  const DoSomethingUseCase(this._repository);
 
   Future<void> call() => _repository.doSomething();
 }
@@ -27,7 +31,7 @@ class DoSomethingUseCase {
 class DoSomethingElseUseCase {
   final SpamRepository _repository;
 
-  DoSomethingElseUseCase(this._repository);
+  const DoSomethingElseUseCase(this._repository);
 
   Future<List<String>> call({
     required String param1,
@@ -43,12 +47,88 @@ class DoSomethingElseUseCase {
 class SetEggUseCase {
   final SpamRepository _repository;
 
-  SetEggUseCase(this._repository);
+  const SetEggUseCase(this._repository);
 
-  void call({
+  Future<List<String>> call({
     required Egg newEgg,
   }) =>
       _repository.setEgg(
         newEgg: newEgg,
       );
+}
+
+@injectable
+class SetEgg2UseCase {
+  final SpamRepository _repository;
+
+  const SetEgg2UseCase(this._repository);
+
+  Future<void> call({
+    required Egg newEgg,
+  }) =>
+      _repository.setEgg2(
+        newEgg: newEgg,
+      );
+}
+
+@injectable
+class SetLotEggsUseCase {
+  final SpamRepository _repository;
+
+  const SetLotEggsUseCase(this._repository);
+
+  void call({
+    required List<Plant> newEggs,
+    required Future<List<Zombie<Cat>>> newEggsFuture,
+  }) =>
+      _repository.setLotEggs(
+        newEggs: newEggs,
+        newEggsFuture: newEggsFuture,
+      );
+}
+
+@injectable
+class GetEggUseCase {
+  final SpamRepository _repository;
+
+  const GetEggUseCase(this._repository);
+
+  Egg call() => _repository.getEgg();
+}
+
+@injectable
+class GetEgg2UseCase {
+  final SpamRepository _repository;
+
+  const GetEgg2UseCase(this._repository);
+
+  Egg call() => _repository.getEgg2();
+}
+
+@injectable
+class GetPlantUseCase {
+  final SpamRepository _repository;
+
+  const GetPlantUseCase(this._repository);
+
+  Plant call() => _repository.getPlant();
+}
+
+@injectable
+class GetZombieWithCastUseCase {
+  final SpamRepository _repository;
+
+  const GetZombieWithCastUseCase(this._repository);
+
+  Zombie<Cat> call() => _repository.getZombieWithCast();
+}
+
+@injectable
+class GetLotsZombiesWithCatsUseCase {
+  final SpamRepository _repository;
+
+  const GetLotsZombiesWithCatsUseCase(this._repository);
+
+  Future<List<Zombie<List<Cat>>>> call() =>
+      _repository.getLotsZombiesWithCats();
 }

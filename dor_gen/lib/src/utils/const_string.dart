@@ -8,4 +8,6 @@ class ConstString {
 \/\/**************************************************************************''';
 
   static const String dorConfigGenerateUseCase = 'generateUseCase';
+  static const String newline = '''
+''';
 }
