@@ -7,18 +7,29 @@
 //**************************************************************************
 
 // **************************************************************************
-// UseCasesGenerator
+// DtoGenerator
 // **************************************************************************
 
-// UseCases for FooRepository;
-import 'package:injectable/injectable.dart';
-import 'foo_repository.dart';
+// ignore_for_file: unused_import
 
-@injectable
-class DoNothingUseCase {
-  final FooRepository _repository;
+// DTO for Plant;
+import 'package:json_annotation/json_annotation.dart';
+import 'plant.dart';
+part 'plant.dto.g.g.dart';
 
-  const DoNothingUseCase(this._repository);
+@JsonSerializable(
+  createToJson: true,
+  createFactory: true,
+)
+class PlantDto {
+  final int id;
 
-  void call() => _repository.doNothing();
+  const PlantDto({
+    required this.id,
+  });
+
+  Map<String, dynamic> toJson() => _$PlantDtoToJson(this);
+
+  factory PlantDto.fromJson(Map<String, dynamic> json) =>
+      _$PlantDtoFromJson(json);
 }

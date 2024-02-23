@@ -7,3 +7,11 @@ builders:
     auto_apply: dependents
     build_to: source
     runs_before: ["json_serializable", "injectable","retrofit"]
+
+  dto:
+    import: "package:dor_gen/builder.dart"
+    builder_factories: ["dtoBuilder"]
+    build_extensions: {".dart": [".dto.g.dart"]}
+    auto_apply: dependents
+    build_to: source
+    runs_before: ["json_serializable", "injectable","retrofit"]

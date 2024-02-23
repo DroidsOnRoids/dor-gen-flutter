@@ -1,17 +1,23 @@
+import 'package:dor_gen/annotations.dart';
+import 'package:example/domain/spam/model/plant.dart';
+
+@Dto()
 class Egg {
   final String id;
-  final String name;
-  final String description;
+  final String? name;
+  final double description;
   final String image;
   final String price;
-  final String weight;
-  final String category;
-  final String createdAt;
+  String weight;
+  final int category;
+  final DateTime createdAt;
   final String updatedAt;
+  final Plant plant;
 
-  const Egg({
+  Egg({
+    required this.plant,
     required this.id,
-    required this.name,
+    this.name,
     required this.description,
     required this.image,
     required this.price,

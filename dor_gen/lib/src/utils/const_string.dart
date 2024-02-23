@@ -10,6 +10,8 @@ class ConstString {
 \/\/**************************************************************************''';
 
   static const String dorConfigGenerateUseCase = 'generateUseCase';
+  static const String dtoConfigGenerateToDomain = 'generateToDomain';
+  static const String dtoConfigGenerateToDto = 'generateToDto';
   static const String newline = '''
 ''';
 }

@@ -10,6 +10,8 @@
 // UseCasesGenerator
 // **************************************************************************
 
+// ignore_for_file: unused_import
+
 // UseCases for SpamRepository;
 import 'package:injectable/injectable.dart';
 import 'spam_repository.dart';

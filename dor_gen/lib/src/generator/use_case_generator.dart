@@ -20,7 +20,7 @@ class UseCasesGenerator extends GeneratorForAnnotation<DorGenerator> {
     BuildStep buildStep,
   ) {
     final buffer = StringBuffer();
-
+    _importBuilder.addToImports(CodeBuilder.standardIgnore());
     _importBuilder.addToImports('// UseCases for ${element.name};');
 
     if (_shouldGenerateUseCases(annotation)) {
