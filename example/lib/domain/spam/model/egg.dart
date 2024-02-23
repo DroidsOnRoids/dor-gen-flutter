@@ -1,4 +1,5 @@
 import 'package:dor_gen/annotations.dart';
+import 'package:example/domain/spam/model/cat.dart';
 import 'package:example/domain/spam/model/plant.dart';
 
 @Dto()
@@ -13,8 +14,10 @@ class Egg {
   final DateTime createdAt;
   final String updatedAt;
   final Plant plant;
+  final List<Cat> cats;
 
   Egg({
+    required this.cats,
     required this.plant,
     required this.id,
     this.name,

@@ -12,30 +12,29 @@
 
 // ignore_for_file: unused_import
 
-// DTO for Plant;
+// DTO for Cat;
 import 'package:json_annotation/json_annotation.dart';
-import 'plant.dart';
-part 'plant.dto.g.g.dart';
+import 'cat.dart';
+part 'cat.dto.g.g.dart';
 
 @JsonSerializable(
   createToJson: true,
   createFactory: true,
 )
-class PlantDto {
+class CatDto {
   final int id;
 
-  const PlantDto({
+  const CatDto({
     required this.id,
   });
 
-  Map<String, dynamic> toJson() => _$PlantDtoToJson(this);
+  Map<String, dynamic> toJson() => _$CatDtoToJson(this);
 
-  factory PlantDto.fromJson(Map<String, dynamic> json) =>
-      _$PlantDtoFromJson(json);
+  factory CatDto.fromJson(Map<String, dynamic> json) => _$CatDtoFromJson(json);
 }
 
-extension PlantToPlantDto on Plant {
-  PlantDto toDto() => PlantDto(
+extension CatToCatDto on Cat {
+  CatDto toDto() => CatDto(
         id: id,
       );
 }

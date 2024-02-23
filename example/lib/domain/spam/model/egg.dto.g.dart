@@ -17,6 +17,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'egg.dart';
 import 'package:example/domain/spam/model/plant.dart';
 import 'package:example/domain/spam/model/plant.dto.g.dart';
+import 'package:example/domain/spam/model/cat.dart';
+import 'package:example/domain/spam/model/cat.dto.g.dart';
 part 'egg.dto.g.g.dart';
 
 @JsonSerializable(
@@ -34,8 +36,10 @@ class EggDto {
   final DateTime createdAt;
   final String updatedAt;
   final PlantDto plant;
+  final List<Cat> cats;
 
   EggDto({
+    required this.cats,
     required this.plant,
     required this.id,
     this.name,
@@ -51,4 +55,20 @@ class EggDto {
   Map<String, dynamic> toJson() => _$EggDtoToJson(this);
 
   factory EggDto.fromJson(Map<String, dynamic> json) => _$EggDtoFromJson(json);
+}
+
+extension EggToEggDto on Egg {
+  EggDto toDto() => EggDto(
+        id: id,
+        name: name,
+        description: description,
+        image: image,
+        price: price,
+        weight: weight,
+        category: category,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        plant: plant.toDto(),
+        cats: cats,
+      );
 }

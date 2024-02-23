@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:dor_gen/src/annotations/dto.dart';
 import 'package:dor_gen/src/utils/code_builder.dart';
@@ -23,7 +24,8 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     _importBuilder.addToImports('// DTO for ${element.name};');
     _importBuilder.addToImports(CodeBuilder.import('package:json_annotation/json_annotation.dart'));
     _importBuilder.addToImports(CodeBuilder.import(element.source!.shortName));
-    //dto class
+
+    //build dto class
     final String dtoClassName = CodeBuilder.createDtoClassNameFromClassName(element.name ?? '');
     _buildDtoClass(
       buffer: buffer,
@@ -32,7 +34,18 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
       annotation: annotation,
     );
 
-    //must be added as last because is part
+    //build extension mapper to domain
+
+    //build extension mapper to dto
+    if (annotation.read(ConstString.dtoConfigGenerateToDto).boolValue) {
+      _buildExtensionToDto(
+        buffer: buffer,
+        inputClass: element,
+        dtoClassName: dtoClassName,
+      );
+    }
+
+    //last import - part
     _importBuilder.addToImports(CodeBuilder.fromElementToGeneratedPart(element));
 
     //build result file
@@ -77,6 +90,12 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
         }
       }
     }
+  }
+
+  String _buildFieldTypeDtoRecursive({
+    required DartType type,
+  }) {
+    //TODO not that easy
   }
 
   void _buildClassConstructor({
@@ -143,5 +162,28 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     );
 
     buffer.write('}');
+  }
+
+  void _buildExtensionToDto({
+    required StringBuffer buffer,
+    required Element inputClass,
+    required String dtoClassName,
+  }) {
+    buffer.writeln('');
+    buffer.writeln('extension ${inputClass.name}To$dtoClassName on ${inputClass.name} {');
+    buffer.writeln('  $dtoClassName toDto() =>');
+    buffer.writeln('    $dtoClassName(');
+    for (final field in inputClass.children) {
+      if (field is FieldElement) {
+        if (_importBuilder.checkIfIsNotOneOfDartCoreTypes(field.type)) {
+          buffer.writeln('      ${field.name}: ${field.name}.toDto(),');
+        } else {
+          buffer.writeln('      ${field.name}: ${field.name},');
+        }
+      }
+    }
+    buffer.writeln('    );');
+    buffer.writeln('  ');
+    buffer.writeln('}');
   }
 }
