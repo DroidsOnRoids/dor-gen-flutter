@@ -14,9 +14,9 @@
 import 'package:injectable/injectable.dart';
 import 'spam_repository.dart';
 import 'package:example/domain/spam/model/egg.dart';
-import 'package:example/domain/spam/model/plant.dart';
 import 'package:example/domain/spam/model/zombie.dart';
 import 'package:example/domain/spam/model/cat.dart';
+import 'package:example/domain/spam/model/plant.dart';
 
 @injectable
 class DoSomethingUseCase {
@@ -78,11 +78,9 @@ class SetLotEggsUseCase {
   const SetLotEggsUseCase(this._repository);
 
   void call({
-    required List<Plant> newEggs,
     required Future<List<Zombie<Cat>>> newEggsFuture,
   }) =>
       _repository.setLotEggs(
-        newEggs: newEggs,
         newEggsFuture: newEggsFuture,
       );
 }

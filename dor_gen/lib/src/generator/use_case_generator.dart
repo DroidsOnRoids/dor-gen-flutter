@@ -8,10 +8,10 @@ import 'package:dor_gen/src/utils/errors.dart';
 import 'package:dor_gen/src/utils/import_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
-const TypeChecker _DorConfigChecker = TypeChecker.fromRuntime(DorConfig);
+const TypeChecker _dorConfigChecker = TypeChecker.fromRuntime(DorConfig);
 
 class UseCasesGenerator extends GeneratorForAnnotation<DorGenerator> {
-  ImportBuilder _importBuilder = ImportBuilder();
+  final ImportBuilder _importBuilder = ImportBuilder();
 
   @override
   String generateForAnnotatedElement(
@@ -58,7 +58,7 @@ class UseCasesGenerator extends GeneratorForAnnotation<DorGenerator> {
       annotation.read(ConstString.dorConfigGenerateUseCase).boolValue;
 
   bool _shouldGenerateUseCase(Element child) {
-    final configAnnotation = _DorConfigChecker.firstAnnotationOfExact(child);
+    final configAnnotation = _dorConfigChecker.firstAnnotationOfExact(child);
     if (configAnnotation == null) {
       return true;
     }

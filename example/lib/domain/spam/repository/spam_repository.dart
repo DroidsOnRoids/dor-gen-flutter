@@ -21,7 +21,6 @@ abstract class SpamRepository {
   Future<void> setEgg2({required Egg newEgg});
 
   void setLotEggs({
-    required List<Plant> newEggs,
     required Future<List<Zombie<Cat>>> newEggsFuture,
   });
 

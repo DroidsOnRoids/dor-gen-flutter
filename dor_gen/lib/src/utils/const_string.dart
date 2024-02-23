@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_string_escapes
+
 class ConstString {
   static const String defaultDorHeader = '''\/\/ GENERATED CODE - DO NOT MODIFY BY HAND
 \/\/ 
