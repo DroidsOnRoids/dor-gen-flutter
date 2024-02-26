@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
@@ -36,7 +38,13 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     );
 
     //build extension mapper to domain
-
+    if (annotation.read(ConstString.dtoConfigGenerateToDomain).boolValue) {
+      _buildExtensionToDomain(
+        buffer: buffer,
+        inputClass: element,
+        dtoClassName: dtoClassName,
+      );
+    }
     //build extension mapper to dto
     if (annotation.read(ConstString.dtoConfigGenerateToDto).boolValue) {
       _buildExtensionToDto(
@@ -75,40 +83,48 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
   }) {
     for (final field in elements) {
       if (field is FieldElement) {
-        final type = field.type;
-        _importBuilder.recursionImportsOfDartTypes(type: type);
-        _importBuilder.recursionImportsOfDtoDartTypes(type);
-        String fieldType = '';
-        if (!_importBuilder.checkIfIsNotOneOfDartCoreTypes(type)) {
-          fieldType = '${type.element?.name}' ?? '';
-        } else {
-          fieldType = '${type.element?.name ?? ''}Dto';
-        }
-        if (type.nullabilitySuffix == NullabilitySuffix.question) {
-          fieldType += '?';
-        }
-        FieldDto fieldDto = FieldDto(name: fieldType, parameters: []);
-        if (type is ParameterizedType) {
-          for (var typeArgument in type.typeArguments) {
-            _buildFieldTypeDtoRecursive(type: typeArgument, fieldDto: fieldDto);
-          }
-        }
-
-        print('FIELDDTP : ${fieldDto.toString()}');
-        print('FIELD : ${fieldDto.toTypeString()}');
-        fieldType = fieldDto.toTypeString();
-        if (field.isFinal) {
-          buffer.writeln('  final $fieldType ${field.name};');
-        } else {
-          buffer.writeln('  $fieldType ${field.name};');
-        }
+        _writeFieldDto(
+          buffer: buffer,
+          field: field,
+        );
       }
+    }
+  }
+
+  void _writeFieldDto({
+    required StringBuffer buffer,
+    required FieldElement field,
+  }) {
+    final type = field.type;
+    _importBuilder.recursionImportsOfDartTypes(type: type);
+    _importBuilder.recursionImportsOfDtoDartTypes(type);
+    String fieldType = '';
+    if (!_importBuilder.checkIfIsNotOneOfDartCoreTypes(type)) {
+      fieldType = '${type.element?.name}';
+    } else {
+      fieldType = '${type.element?.name ?? ''}Dto';
+    }
+    if (type.nullabilitySuffix == NullabilitySuffix.question) {
+      fieldType += '?';
+    }
+    _FieldDto fieldDto = _FieldDto(name: fieldType, parameters: []);
+    if (type is ParameterizedType) {
+      for (var typeArgument in type.typeArguments) {
+        _buildFieldTypeDtoRecursive(type: typeArgument, fieldDto: fieldDto);
+      }
+    }
+
+    fieldType = fieldDto.toTypeString();
+    if (field.isFinal) {
+      buffer.writeln('  final $fieldType ${field.name};');
+    } else {
+      buffer.writeln('  $fieldType ${field.name};');
     }
   }
 
   void _buildFieldTypeDtoRecursive({
     required DartType type,
-    required FieldDto fieldDto,
+    required _FieldDto fieldDto,
   }) {
     String fieldType = '';
     if (!_importBuilder.checkIfIsNotOneOfDartCoreTypes(type)) {
@@ -119,7 +135,7 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     if (type.nullabilitySuffix == NullabilitySuffix.question) {
       fieldType += '?';
     }
-    FieldDto field = FieldDto(name: fieldType, parameters: []);
+    _FieldDto field = _FieldDto(name: fieldType, parameters: []);
     if (type is ParameterizedType) {
       for (var typeArgument in type.typeArguments) {
         _buildFieldTypeDtoRecursive(type: typeArgument, fieldDto: field);
@@ -205,11 +221,76 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     buffer.writeln('    $dtoClassName(');
     for (final field in inputClass.children) {
       if (field is FieldElement) {
-        if (_importBuilder.checkIfIsNotOneOfDartCoreTypes(field.type)) {
-          buffer.writeln('      ${field.name}: ${field.name}.toDto(),');
+        final type = field.type;
+        String line = '';
+        if (type.isDartCoreList) {
+          line += '      ${field.name}: ${field.name}.map((e)=> ';
+          line += _buildMappingForListToDto(type: (type as ParameterizedType).typeArguments.first);
+          line += ').toList(growable:false),';
+        } else if (_importBuilder.checkIfIsNotOneOfDartCoreTypes(field.type)) {
+          line += '      ${field.name}: ${field.name}.toDto(),';
         } else {
-          buffer.writeln('      ${field.name}: ${field.name},');
+          line += '      ${field.name}: ${field.name},';
         }
+        buffer.writeln(line);
+      }
+    }
+    buffer.writeln('    );');
+    buffer.writeln('  ');
+    buffer.writeln('}');
+  }
+
+  String _buildMappingForListToDto({required DartType type}) {
+    String result = '';
+    if (type.isDartCoreList) {
+      result += 'e.map((e)=>';
+      result += _buildMappingForListToDto(type: (type as ParameterizedType).typeArguments.first);
+      result += ').toList(growable:false)';
+    } else if (_importBuilder.checkIfIsNotOneOfDartCoreTypes(type)) {
+      result += ' e.toDto()';
+    } else {
+      result += 'e';
+    }
+    return result;
+  }
+
+  String _buildMappingForListToDomain({required DartType type}) {
+    String result = '';
+    if (type.isDartCoreList) {
+      result += 'e.map((e)=>';
+      result += _buildMappingForListToDomain(type: (type as ParameterizedType).typeArguments.first);
+      result += ').toList(growable:false)';
+    } else if (_importBuilder.checkIfIsNotOneOfDartCoreTypes(type)) {
+      result += ' e.toDomain()';
+    } else {
+      result += 'e';
+    }
+    return result;
+  }
+
+  void _buildExtensionToDomain({
+    required StringBuffer buffer,
+    required Element inputClass,
+    required String dtoClassName,
+  }) {
+    buffer.writeln('');
+    buffer.writeln('extension ${dtoClassName}To${inputClass.name} on $dtoClassName {');
+    buffer.writeln('  $dtoClassName toDomain() =>');
+    buffer.writeln('    $dtoClassName(');
+    for (final field in inputClass.children) {
+      if (field is FieldElement) {
+        final type = field.type;
+        String line = '';
+        if (type.isDartCoreList) {
+          line += '      ${field.name}: ${field.name}.map((e)=> ';
+          line += _buildMappingForListToDomain(type: (type as ParameterizedType).typeArguments.first);
+          line += ').toList(growable:false),';
+        } else if (_importBuilder.checkIfIsNotOneOfDartCoreTypes(field.type)) {
+          line += '      ${field.name}: ${field.name}.toDomain(),';
+        } else {
+          line += '      ${field.name}: ${field.name},';
+        }
+        buffer.writeln(line);
       }
     }
     buffer.writeln('    );');
@@ -218,17 +299,16 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
   }
 }
 
-class FieldDto {
+class _FieldDto {
   final String name;
-  final List<FieldDto> parameters;
+  final List<_FieldDto> parameters;
 
-  FieldDto({
+  _FieldDto({
     required this.name,
     required this.parameters,
   });
 
   String toTypeString() {
-    print('START _________________ : ${name}');
     String result = '';
     if (parameters.isEmpty) {
       result = name;
@@ -239,12 +319,10 @@ class FieldDto {
       }
       result += '>';
     }
-    print('stop ----------------- : ${result}');
     return result;
   }
 
-  String _recursiveString(FieldDto fieldDto) {
-    print('FIELD DTO czastkowe : ${fieldDto.toString()}');
+  String _recursiveString(_FieldDto fieldDto) {
     String typeName = '';
     if (fieldDto.parameters.isEmpty) {
       typeName += fieldDto.name;

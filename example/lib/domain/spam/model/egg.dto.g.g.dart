@@ -9,8 +9,7 @@ part of 'egg.dto.g.dart';
 EggDto _$EggDtoFromJson(Map<String, dynamic> json) => EggDto(
       cats: (json['cats'] as List<dynamic>)
           .map((e) => (e as List<dynamic>)
-              .map((e) =>
-                  e == null ? null : CatDto.fromJson(e as Map<String, dynamic>))
+              .map((e) => CatDto.fromJson(e as Map<String, dynamic>))
               .toList())
           .toList(),
       plant: PlantDto.fromJson(json['plant'] as Map<String, dynamic>),
@@ -22,7 +21,8 @@ EggDto _$EggDtoFromJson(Map<String, dynamic> json) => EggDto(
       weight: json['weight'] as String?,
       category: json['category'] as int,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] as String,
+      updatedAt:
+          (json['updatedAt'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$EggDtoToJson(EggDto instance) => <String, dynamic>{

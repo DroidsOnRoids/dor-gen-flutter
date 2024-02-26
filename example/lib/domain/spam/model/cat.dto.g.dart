@@ -2,7 +2,7 @@
 //
 //**************************************************************************
 //*                                                                        *
-//*         This code was generated using DroidsOnRoids generator          *
+//*      ⚡ This code was generated using DroidsOnRoids generator ⚡      *
 //*                                                                        *
 //**************************************************************************
 
@@ -31,6 +31,12 @@ class CatDto {
   Map<String, dynamic> toJson() => _$CatDtoToJson(this);
 
   factory CatDto.fromJson(Map<String, dynamic> json) => _$CatDtoFromJson(json);
+}
+
+extension CatDtoToCat on CatDto {
+  CatDto toDomain() => CatDto(
+        id: id,
+      );
 }
 
 extension CatToCatDto on Cat {

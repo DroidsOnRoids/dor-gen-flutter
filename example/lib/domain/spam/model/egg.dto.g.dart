@@ -2,7 +2,7 @@
 //
 //**************************************************************************
 //*                                                                        *
-//*         This code was generated using DroidsOnRoids generator          *
+//*      ⚡ This code was generated using DroidsOnRoids generator ⚡      *
 //*                                                                        *
 //**************************************************************************
 
@@ -34,9 +34,9 @@ class EggDto {
   String? weight;
   final int category;
   final DateTime createdAt;
-  final String updatedAt;
+  final List<String> updatedAt;
   final PlantDto plant;
-  final List<List<CatDto?>> cats;
+  final List<List<CatDto>> cats;
 
   EggDto({
     required this.cats,
@@ -57,6 +57,24 @@ class EggDto {
   factory EggDto.fromJson(Map<String, dynamic> json) => _$EggDtoFromJson(json);
 }
 
+extension EggDtoToEgg on EggDto {
+  EggDto toDomain() => EggDto(
+        id: id,
+        name: name,
+        description: description,
+        image: image,
+        price: price,
+        weight: weight,
+        category: category,
+        createdAt: createdAt,
+        updatedAt: updatedAt.map((e) => e).toList(growable: false),
+        plant: plant.toDomain(),
+        cats: cats
+            .map((e) => e.map((e) => e.toDomain()).toList(growable: false))
+            .toList(growable: false),
+      );
+}
+
 extension EggToEggDto on Egg {
   EggDto toDto() => EggDto(
         id: id,
@@ -67,8 +85,10 @@ extension EggToEggDto on Egg {
         weight: weight,
         category: category,
         createdAt: createdAt,
-        updatedAt: updatedAt,
+        updatedAt: updatedAt.map((e) => e).toList(growable: false),
         plant: plant.toDto(),
-        cats: cats,
+        cats: cats
+            .map((e) => e.map((e) => e.toDto()).toList(growable: false))
+            .toList(growable: false),
       );
 }

@@ -2,7 +2,7 @@
 //
 //**************************************************************************
 //*                                                                        *
-//*         This code was generated using DroidsOnRoids generator          *
+//*      ⚡ This code was generated using DroidsOnRoids generator ⚡      *
 //*                                                                        *
 //**************************************************************************
 
@@ -32,6 +32,12 @@ class PlantDto {
 
   factory PlantDto.fromJson(Map<String, dynamic> json) =>
       _$PlantDtoFromJson(json);
+}
+
+extension PlantDtoToPlant on PlantDto {
+  PlantDto toDomain() => PlantDto(
+        id: id,
+      );
 }
 
 extension PlantToPlantDto on Plant {

@@ -2,7 +2,7 @@
 //
 //**************************************************************************
 //*                                                                        *
-//*         This code was generated using DroidsOnRoids generator          *
+//*      ⚡ This code was generated using DroidsOnRoids generator ⚡      *
 //*                                                                        *
 //**************************************************************************
 

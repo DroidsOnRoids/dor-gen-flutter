@@ -12,9 +12,9 @@ class Egg {
   String? weight;
   final int category;
   final DateTime createdAt;
-  final String updatedAt;
+  final List<String> updatedAt;
   final Plant plant;
-  final List<List<Cat?>> cats;
+  final List<List<Cat>> cats;
 
   Egg({
     required this.cats,
