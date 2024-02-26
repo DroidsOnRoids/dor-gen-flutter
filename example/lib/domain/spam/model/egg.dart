@@ -9,12 +9,12 @@ class Egg {
   final double description;
   final String image;
   final String price;
-  String weight;
+  String? weight;
   final int category;
   final DateTime createdAt;
   final String updatedAt;
   final Plant plant;
-  final List<Cat> cats;
+  final List<List<Cat?>> cats;
 
   Egg({
     required this.cats,

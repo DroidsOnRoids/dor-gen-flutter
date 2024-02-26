@@ -31,12 +31,12 @@ class EggDto {
   final double description;
   final String image;
   final String price;
-  String weight;
+  String? weight;
   final int category;
   final DateTime createdAt;
   final String updatedAt;
   final PlantDto plant;
-  final List<Cat> cats;
+  final List<List<CatDto?>> cats;
 
   EggDto({
     required this.cats,
