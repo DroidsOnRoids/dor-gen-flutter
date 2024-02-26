@@ -1,15 +1,18 @@
-import 'dart:core';
-
+import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:dor_gen/src/annotations/dto.dart';
+import 'package:dor_gen/src/annotations/dto_config_annotation.dart';
 import 'package:dor_gen/src/utils/code_builder.dart';
 import 'package:dor_gen/src/utils/const_string.dart';
 import 'package:dor_gen/src/utils/errors.dart';
 import 'package:dor_gen/src/utils/import_builder.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:source_gen/source_gen.dart';
+
+const TypeChecker _dtoConfigChecker = TypeChecker.fromRuntime(DtoConfig);
 
 class DtoGenerator extends GeneratorForAnnotation<Dto> {
   final ImportBuilder _importBuilder = ImportBuilder();
@@ -71,11 +74,37 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     required ConstantReader annotation,
     required StringBuffer buffer,
   }) {
+    final DartObject jsonSerializable = annotation.read(ConstString.dtoConfigJsonSerializable).objectValue;
     buffer.writeln('@JsonSerializable(');
+    buffer.writeln('  anyMap: ${jsonSerializable.getField('anyMap')?.toBoolValue()},');
+    buffer.writeln('  checked: ${jsonSerializable.getField('checked')?.toBoolValue()},');
+    buffer.writeln('  constructor: ${jsonSerializable.getField('constructor')?.toStringValue()},');
+    buffer.writeln('  createFieldMap: ${jsonSerializable.getField('createFieldMap')?.toBoolValue()},');
+    buffer.writeln(
+        '  disallowUnrecognizedKeys: ${jsonSerializable.getField('disallowUnrecognizedKeys')?.toBoolValue()},');
+    buffer.writeln('  explicitToJson: ${jsonSerializable.getField('explicitToJson')?.toBoolValue()},');
+    if (jsonSerializable.getField('fieldRename') != null) {
+      String fieldRename = '';
+      fieldRename = jsonSerializable.getField('fieldRename')?.getField('_name')?.toStringValue() ?? '';
+      if (fieldRename.isNotEmpty) {
+        fieldRename = 'FieldRename.$fieldRename';
+        buffer.writeln('  fieldRename: $fieldRename,');
+      }
+    }
+
+    buffer.writeln('  ignoreUnannotated: ${jsonSerializable.getField('ignoreUnannotated')?.toBoolValue()},');
+    buffer.writeln('  includeIfNull: ${jsonSerializable.getField('includeIfNull')?.toBoolValue()},');
+    //TODO
+    // buffer.writeln('  converters: ${jsonSerializable.getField('converters')?.toListValue()?.map((e) =>e. ).toList()},');
+    buffer.writeln(
+        '  genericArgumentFactories: ${jsonSerializable.getField('genericArgumentFactories')?.toBoolValue()},');
+    buffer.writeln('  createPerFieldToJson: ${jsonSerializable.getField('createPerFieldToJson')?.toBoolValue()},');
     buffer.writeln('  createToJson: ${annotation.read(ConstString.dtoConfigGenerateToDto).boolValue},');
     buffer.writeln('  createFactory: ${annotation.read(ConstString.dtoConfigGenerateToDomain).boolValue},');
     buffer.writeln(')');
   }
+
+  void _addJsonKeyAnnotation() {}
 
   void _buildClassField({
     required StringBuffer buffer,
@@ -115,11 +144,42 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     }
 
     fieldType = fieldDto.toTypeString();
+
+    final String jsonKeyAnnotation = _buildJsonKeyAnnotation(fieldElement: field);
+    if (jsonKeyAnnotation.isNotEmpty) {
+      buffer.writeln('  $jsonKeyAnnotation');
+    }
+
     if (field.isFinal) {
       buffer.writeln('  final $fieldType ${field.name};');
     } else {
       buffer.writeln('  $fieldType ${field.name};');
     }
+  }
+
+  String _buildJsonKeyAnnotation({required FieldElement fieldElement}) {
+    String result = '';
+    final JsonKey? jsonKey = _dtoConfigChecker
+        .firstAnnotationOfExact(fieldElement)
+        ?.getField(ConstString.dtoConfigJsonKey)
+        ?.toTypeValue() as JsonKey?;
+
+    if (jsonKey != null) {
+      result += '@JsonKey(';
+      result += 'defaultValue: ${jsonKey.defaultValue},';
+      result += 'disallowNullValue: ${jsonKey.disallowNullValue},';
+      result += 'fromJson: ${jsonKey.fromJson},';
+      result += 'includeFromJson: ${jsonKey.includeFromJson},';
+      result += 'includeIfNull: ${jsonKey.includeIfNull},';
+      result += 'includeToJson: ${jsonKey.includeToJson},';
+      result += 'name: ${jsonKey.name},';
+      result += 'readValue: ${jsonKey.readValue},';
+      result += 'required: ${jsonKey.required},';
+      result += 'toJson: ${jsonKey.toJson},';
+      result += 'unknownEnumValue: ${jsonKey.unknownEnumValue},';
+      result += ')';
+    }
+    return result;
   }
 
   void _buildFieldTypeDtoRecursive({

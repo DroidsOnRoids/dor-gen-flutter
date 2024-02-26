@@ -22,6 +22,17 @@ import 'package:example/domain/spam/model/cat.dto.g.dart';
 part 'egg.dto.g.g.dart';
 
 @JsonSerializable(
+  anyMap: null,
+  checked: true,
+  constructor: null,
+  createFieldMap: null,
+  disallowUnrecognizedKeys: null,
+  explicitToJson: null,
+  fieldRename: FieldRename.kebab,
+  ignoreUnannotated: null,
+  includeIfNull: null,
+  genericArgumentFactories: null,
+  createPerFieldToJson: null,
   createToJson: true,
   createFactory: true,
 )

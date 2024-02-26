@@ -18,6 +18,16 @@ import 'plant.dart';
 part 'plant.dto.g.g.dart';
 
 @JsonSerializable(
+  anyMap: null,
+  checked: null,
+  constructor: null,
+  createFieldMap: null,
+  disallowUnrecognizedKeys: null,
+  explicitToJson: null,
+  ignoreUnannotated: null,
+  includeIfNull: null,
+  genericArgumentFactories: null,
+  createPerFieldToJson: null,
   createToJson: true,
   createFactory: true,
 )

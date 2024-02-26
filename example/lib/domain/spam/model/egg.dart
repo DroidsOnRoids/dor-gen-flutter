@@ -1,8 +1,14 @@
 import 'package:dor_gen/annotations.dart';
 import 'package:example/domain/spam/model/cat.dart';
 import 'package:example/domain/spam/model/plant.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-@Dto()
+@Dto(
+  jsonSerializable: JsonSerializable(
+    checked: true,
+    fieldRename: FieldRename.kebab,
+  ),
+)
 class Egg {
   final String id;
   final String? name;
