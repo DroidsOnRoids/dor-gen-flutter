@@ -20,34 +20,61 @@ EggDto _$EggDtoFromJson(Map<String, dynamic> json) => $checkedCreate(
                   .toList()),
           plant: $checkedConvert(
               'plant', (v) => PlantDto.fromJson(v as Map<String, dynamic>)),
-          id: $checkedConvert('id', (v) => v as String),
-          name: $checkedConvert('name', (v) => v as String?),
-          description:
-              $checkedConvert('description', (v) => (v as num).toDouble()),
-          image: $checkedConvert('image', (v) => v as String),
+          id: $checkedConvert('id', (v) => v as int? ?? 0),
+          name: $checkedConvert('name', (v) => v as String? ?? 'default'),
+          description: $checkedConvert(
+              'quantity', (v) => (v as num?)?.toDouble() ?? 1.3),
+          image: $checkedConvert(
+            'image',
+            (v) => Formatter.formatCurrency(v as double),
+            readValue: readFunction,
+          ),
           price: $checkedConvert('price', (v) => v as String),
           weight: $checkedConvert('weight', (v) => v as String?),
-          category: $checkedConvert('category', (v) => v as int),
+          category: $checkedConvert(
+              'category',
+              (v) => $enumDecode(_$CategoryEnumEnumMap, v,
+                  unknownValue: CategoryEnum.other)),
+          category2: $checkedConvert(
+              'category2',
+              (v) => $enumDecodeNullable(_$CategoryEnumEnumMap, v,
+                  unknownValue: JsonKey.nullForUndefinedEnumValue)),
           createdAt:
               $checkedConvert('created-at', (v) => DateTime.parse(v as String)),
-          updatedAt: $checkedConvert('updated-at',
-              (v) => (v as List<dynamic>).map((e) => e as String).toList()),
+          updatedAt: $checkedConvert(
+              'updated-at',
+              (v) => (v as List<dynamic>)
+                  .map((e) => (e as num).toDouble())
+                  .toList()),
         );
         return val;
       },
-      fieldKeyMap: const {'createdAt': 'created-at', 'updatedAt': 'updated-at'},
+      fieldKeyMap: const {
+        'description': 'quantity',
+        'createdAt': 'created-at',
+        'updatedAt': 'updated-at'
+      },
     );
 
 Map<String, dynamic> _$EggDtoToJson(EggDto instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'description': instance.description,
-      'image': instance.image,
+      'quantity': instance.description,
+      'image': SUPERtoJson(instance.image),
       'price': instance.price,
       'weight': instance.weight,
-      'category': instance.category,
+      'category': _$CategoryEnumEnumMap[instance.category]!,
+      'category2': _$CategoryEnumEnumMap[instance.category2],
       'created-at': instance.createdAt.toIso8601String(),
       'updated-at': instance.updatedAt,
       'plant': instance.plant,
       'cats': instance.cats,
     };
+
+const _$CategoryEnumEnumMap = {
+  CategoryEnum.all: 'all',
+  CategoryEnum.promotion: 'promotion',
+  CategoryEnum.social: 'social',
+  CategoryEnum.spam: 'spam',
+  CategoryEnum.other: 'other',
+};

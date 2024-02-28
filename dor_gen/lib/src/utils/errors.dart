@@ -8,3 +8,14 @@ class UnnamedParameterError extends Error {
     return 'UnnamedParameterError: $message';
   }
 }
+
+class BadArgumentsError extends Error {
+  final String message;
+
+  BadArgumentsError(this.message);
+
+  @override
+  String toString() {
+    return 'BadArgumentsError: $message';
+  }
+}

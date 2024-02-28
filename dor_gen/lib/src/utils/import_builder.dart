@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:analyzer/dart/analysis/utilities.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dor_gen/src/utils/code_builder.dart';
 
@@ -19,6 +24,13 @@ class ImportBuilder {
         recursionImportsOfDartTypes(type: typeArgument);
       }
     }
+  }
+
+  void addImportsOfDartFunctionTypes({required FunctionType type}) {
+    for (var parameter in type.parameters) {
+      recursionImportsOfDartTypes(type: parameter.type);
+    }
+    recursionImportsOfDartTypes(type: type.returnType);
   }
 
   void _addImportFromType({required DartType type}) {
@@ -69,10 +81,22 @@ class ImportBuilder {
   }
 
   void _addImportDtoFromType(DartType type) {
-    if (checkIfIsNotOneOfDartCoreTypes(type)) {
+    if (checkIfIsNotOneOfDartCoreTypes(type) && (type.element is! EnumElement)) {
       if (type.element?.librarySource != null) {
         String source = CodeBuilder.fromSourceFullNameToPackageDtoImport(type.element!.source!.fullName);
         addToImports(CodeBuilder.import(source));
+      }
+    }
+  }
+
+  void addAllImportsOfSourceFile(Element element) {
+    final file = File('..${element.source!.fullName}');
+    final fileString = file.readAsStringSync();
+    final compilationUnit = parseString(content: fileString).unit;
+
+    for (var directive in compilationUnit.directives) {
+      if (directive is ImportDirective) {
+        addToImports('import ${directive.uri};');
       }
     }
   }

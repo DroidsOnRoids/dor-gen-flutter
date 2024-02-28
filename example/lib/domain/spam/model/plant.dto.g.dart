@@ -15,6 +15,7 @@
 // DTO for Plant;
 import 'package:json_annotation/json_annotation.dart';
 import 'plant.dart';
+import 'package:dor_gen/annotations.dart';
 part 'plant.dto.g.g.dart';
 
 @JsonSerializable(
