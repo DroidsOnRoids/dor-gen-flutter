@@ -39,13 +39,16 @@ class CodeBuilder {
     return source;
   }
 
-  static String fromElementToGeneratedPart(Element element) {
+  static String fromElementToGeneratedPart({
+    required Element element,
+    required List<String> extension,
+  }) {
     String source = element.librarySource!.fullName;
     var splitSource = source.split('/');
     source = splitSource.last;
     splitSource = source.split('.');
     splitSource.removeLast();
-    splitSource.addAll(['dto', 'g', 'g', 'dart']);
+    splitSource.addAll(extension);
     source = splitSource.join('.');
     source = 'part \'$source\';';
     return source;
@@ -63,4 +66,6 @@ class CodeBuilder {
   }
 
   static String standardIgnore() => '// ignore_for_file: unused_import\n\n';
+
+  static String createNameForDataSource(Element element) => '${toUpperFirstLetter(element.name!)}DataSource';
 }

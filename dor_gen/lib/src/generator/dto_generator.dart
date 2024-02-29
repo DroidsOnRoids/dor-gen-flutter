@@ -2,7 +2,7 @@ import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:build/src/builder/build_step.dart';
+import 'package:build/build.dart';
 import 'package:dor_gen/src/annotations/dto.dart';
 import 'package:dor_gen/src/annotations/dto_config_annotation.dart';
 import 'package:dor_gen/src/utils/code_builder.dart';
@@ -47,6 +47,7 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
         dtoClassName: dtoClassName,
       );
     }
+
     //build extension mapper to dto
     if (annotation.read(ConstString.dtoConfigGenerateToDto).boolValue) {
       _buildExtensionToDto(
@@ -57,7 +58,10 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     }
 
     //last import - part
-    _importBuilder.addToImports(CodeBuilder.fromElementToGeneratedPart(element));
+    _importBuilder.addToImports(CodeBuilder.fromElementToGeneratedPart(
+      element: element,
+      extension: ['dto', 'g', 'g', 'dart'],
+    ));
 
     //build result file
     StringBuffer result = StringBuffer();
@@ -186,7 +190,6 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
       } else if (defaultValue.toListValue() != null) {
         //TODO
         throw UnimplementedError('defaultValue.toListValue() not implemented yet');
-        // return defaultValue.toListValue().toString();
       } else if (defaultValue.toMapValue() != null) {
         //TODO
         throw UnimplementedError('defaultValue.toMapValue() not implemented yet');

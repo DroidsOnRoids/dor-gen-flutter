@@ -38,10 +38,18 @@ class DoSomethingElseUseCase {
   Future<List<String>> call({
     required String param1,
     int? param2,
+    required int param3,
+    int? param4,
+    int? param5,
+    int? param6,
   }) =>
       _repository.doSomethingElse(
         param1: param1,
         param2: param2,
+        param3: param3,
+        param4: param4,
+        param5: param5,
+        param6: param6,
       );
 }
 

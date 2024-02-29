@@ -1,6 +1,7 @@
 library dor_gen.builder;
 
 import 'package:build/build.dart';
+import 'package:dor_gen/src/generator/data_source_generator.dart';
 import 'package:dor_gen/src/generator/dto_generator.dart';
 import 'package:dor_gen/src/generator/use_case_generator.dart';
 import 'package:dor_gen/src/utils/const_string.dart';
@@ -15,5 +16,11 @@ Builder useCasesBuilder(BuilderOptions options) => LibraryBuilder(
 Builder dtoBuilder(BuilderOptions options) => LibraryBuilder(
       DtoGenerator(),
       generatedExtension: '.dto.g.dart',
+      header: ConstString.defaultDorHeader,
+    );
+
+Builder dataSourceBuilder(BuilderOptions options) => LibraryBuilder(
+      DataSourceGenerator(),
+      generatedExtension: '.data_source.g.dart',
       header: ConstString.defaultDorHeader,
     );
