@@ -16,6 +16,8 @@
 import 'foo_repository.dart';
 import 'package:injectable/injectable.dart';
 import 'package:example/domain/foo/repository/foo_repository.data_source.g.dart';
+import 'package:example/domain/foo/model/thing.dart';
+import 'package:example/domain/foo/model/thing.dto.g.dart';
 
 @LazySingleton(as: FooRepository)
 class FooRepositoryImpl implements FooRepository {
@@ -24,9 +26,15 @@ class FooRepositoryImpl implements FooRepository {
   const FooRepositoryImpl(this._dataSource);
 
   @override
-  Future<void> doNothing() async {
-    final resultDto = await _dataSource.doNothing();
-    final result = resultDto;
+  Future<Thing> doSomething({
+    required String id,
+    required String name,
+  }) async {
+    final resultDto = await _dataSource.doSomething(
+      id: id,
+      name: name,
+    );
+    final result = resultDto.toDomain();
     return result;
   }
 }

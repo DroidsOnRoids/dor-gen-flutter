@@ -12,15 +12,24 @@
 
 // ignore_for_file: unused_import
 
+import 'package:example/domain/foo/model/thing.dart';
 // UseCases for FooRepository;
 import 'package:injectable/injectable.dart';
+
 import 'foo_repository.dart';
 
 @injectable
-class DoNothingUseCase {
+class DoSomethingUseCase {
   final FooRepository _repository;
 
-  const DoNothingUseCase(this._repository);
+  const DoSomethingUseCase(this._repository);
 
-  Future<void> call() => _repository.doNothing();
+  Future<Thing> call({
+    required String id,
+    required String name,
+  }) =>
+      _repository.doSomething(
+        id: id,
+        name: name,
+      );
 }

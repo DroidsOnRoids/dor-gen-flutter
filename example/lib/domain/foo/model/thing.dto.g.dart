@@ -12,10 +12,10 @@
 
 // ignore_for_file: unused_import
 
-// DTO for Cat;
+// DTO for Thing;
 import 'package:json_annotation/json_annotation.dart';
-import 'cat.dart';
-part 'cat.dto.g.g.dart';
+import 'thing.dart';
+part 'thing.dto.g.g.dart';
 
 @JsonSerializable(
   anyMap: null,
@@ -31,34 +31,31 @@ part 'cat.dto.g.g.dart';
   createToJson: true,
   createFactory: true,
 )
-class CatDto {
+class ThingDto {
   final int id;
   final String name;
-  final List<String> toys;
 
-  const CatDto({
+  const ThingDto({
     required this.id,
     required this.name,
-    required this.toys,
   });
 
-  Map<String, dynamic> toJson() => _$CatDtoToJson(this);
+  Map<String, dynamic> toJson() => _$ThingDtoToJson(this);
 
-  factory CatDto.fromJson(Map<String, dynamic> json) => _$CatDtoFromJson(json);
+  factory ThingDto.fromJson(Map<String, dynamic> json) =>
+      _$ThingDtoFromJson(json);
 }
 
-extension CatDtoToCat on CatDto {
-  Cat toDomain() => Cat(
+extension ThingDtoToThing on ThingDto {
+  Thing toDomain() => Thing(
         id: id,
         name: name,
-        toys: toys.map((e) => e).toList(growable: false),
       );
 }
 
-extension CatToCatDto on Cat {
-  CatDto toDto() => CatDto(
+extension ThingToThingDto on Thing {
+  ThingDto toDto() => ThingDto(
         id: id,
         name: name,
-        toys: toys.map((e) => e).toList(growable: false),
       );
 }
