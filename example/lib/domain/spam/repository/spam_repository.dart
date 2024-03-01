@@ -2,7 +2,6 @@ import 'package:dor_gen/annotations.dart';
 import 'package:example/domain/spam/model/cat.dart';
 import 'package:example/domain/spam/model/egg.dart';
 import 'package:example/domain/spam/model/plant.dart';
-import 'package:example/domain/spam/model/zombie.dart';
 import 'package:retrofit/retrofit.dart';
 
 @DorGenerator()
@@ -29,35 +28,34 @@ abstract class SpamRepository {
     @Query('param6') int? param6,
   });
 
-  @DorConfig(
-    generateUseCase: false,
-    generateDataSourceMethod: false,
-  )
-  void doNothing();
-
-  @DorConfig(generateDataSourceMethod: false)
+  @DorConfig(apiMethod: ApiMethod.POST, path: '/api/v1/spam/setEgg')
   Future<List<String>> setEgg({required Egg newEgg});
 
-  @DorConfig(generateDataSourceMethod: false)
+  @DorConfig(apiMethod: ApiMethod.POST, path: '/api/v1/spam/setEgg2')
   Future<void> setEgg2({required Egg newEgg});
 
-  @DorConfig(generateDataSourceMethod: false)
-  void setLotEggs({
-    required Future<List<Zombie<Cat>>> newEggsFuture,
+  @DorConfig(apiMethod: ApiMethod.POST, path: '/api/v1/spam/setPlant')
+  Future<void> setLotEggs({
+    required Future<List<Cat>> newEggsFuture,
   });
+  @DorConfig(apiMethod: ApiMethod.GET, path: '/api/v1/spam/getEgg')
+  Future<Egg> getEgg();
 
-  @DorConfig(generateDataSourceMethod: false)
-  Egg getEgg();
+  @DorConfig(apiMethod: ApiMethod.GET, path: '/api/v1/spam/getEgg2')
+  Future<Egg> getEgg2();
 
-  @DorConfig(generateDataSourceMethod: false)
-  Egg getEgg2();
+  @DorConfig(apiMethod: ApiMethod.GET, path: '/api/v1/spam/getPlant')
+  Future<Plant> getPlant();
 
-  @DorConfig(generateDataSourceMethod: false)
-  Plant getPlant();
+  @DorConfig(
+    apiMethod: ApiMethod.GET,
+    path: '/api/v1/spam/getZombieWithCast',
+  )
+  Future<List<Cat>> getZombieWithCats();
 
-  @DorConfig(generateDataSourceMethod: false)
-  Zombie<Cat> getZombieWithCast();
-
-  @DorConfig(generateDataSourceMethod: false)
-  Future<List<Zombie<List<Cat>>>> getLotsZombiesWithCats();
+  @DorConfig(
+    apiMethod: ApiMethod.GET,
+    path: '/api/v1/spam/getLotsZombiesWithCats',
+  )
+  Future<List<List<Cat>>> getLotsZombiesWithCats();
 }

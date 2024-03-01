@@ -128,7 +128,7 @@ class EggDto {
 }
 
 extension EggDtoToEgg on EggDto {
-  EggDto toDomain() => EggDto(
+  Egg toDomain() => Egg(
         id: id,
         name: name,
         description: description,

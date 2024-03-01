@@ -47,7 +47,7 @@ class CatDto {
 }
 
 extension CatDtoToCat on CatDto {
-  CatDto toDomain() => CatDto(
+  Cat toDomain() => Cat(
         id: id,
         name: name,
       );

@@ -59,7 +59,9 @@ class ImportBuilder {
       type.isDartCoreSymbol ||
       type.isDartCoreType ||
       type.isDartAsyncFuture ||
-      type.toString() == 'DateTime');
+      type.toString() == 'DateTime' ||
+      type.toString() == 'dynamic' ||
+      type.toString() == 'void');
 
   void addImportsToBuffer(StringBuffer buffer) {
     for (var import in _imports) {

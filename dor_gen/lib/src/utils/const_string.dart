@@ -10,6 +10,7 @@ class ConstString {
 \/\/**************************************************************************''';
 
   static const String dorGeneratorGenerateDataSource = 'generateDataSource';
+  static const String dorGeneratorGenerateRepositoryImpl = 'generateRepositoryImpl';
   static const String dorConfigGenerateUseCase = 'generateUseCase';
   static const String dorConfigPath = 'path';
   static const String dorConfigGenerateDataSourceMethod = 'generateDataSourceMethod';

@@ -46,7 +46,7 @@ class PlantDto {
 }
 
 extension PlantDtoToPlant on PlantDto {
-  PlantDto toDomain() => PlantDto(
+  Plant toDomain() => Plant(
         id: id,
       );
 }

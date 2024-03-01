@@ -21,7 +21,9 @@ import 'package:dor_gen/annotations.dart';
 import 'package:example/domain/spam/model/cat.dart';
 import 'package:example/domain/spam/model/egg.dart';
 import 'package:example/domain/spam/model/plant.dart';
-import 'package:example/domain/spam/model/zombie.dart';
+import 'package:example/domain/spam/model/egg.dto.g.dart';
+import 'package:example/domain/spam/model/plant.dto.g.dart';
+import 'package:example/domain/spam/model/cat.dto.g.dart';
 part 'spam_repository.data_source.g.g.dart';
 
 @LazySingleton()
@@ -34,12 +36,42 @@ abstract class SpamRepositoryDataSource {
   Future<void> doSomething();
 
   @GET('/api/v1/spam/doSomethingElse')
-  Future<List<String>> doSomethingElse(
-    @Body() String param1,
+  Future<List<String>> doSomethingElse({
+    @Body() required String param1,
     @Query('param2') int? param2,
-    @Path('param3') int param3,
+    @Path('param3') required int param3,
     @Query('param4') int? param4,
     @Query('param5') int? param5,
     @Query('param6') int? param6,
-  );
+  });
+
+  @POST('/api/v1/spam/setEgg')
+  Future<List<String>> setEgg({
+    required Egg newEgg,
+  });
+
+  @POST('/api/v1/spam/setEgg2')
+  Future<void> setEgg2({
+    required Egg newEgg,
+  });
+
+  @POST('/api/v1/spam/setPlant')
+  Future<void> setLotEggs({
+    required Future<List<Cat>> newEggsFuture,
+  });
+
+  @GET('/api/v1/spam/getEgg')
+  Future<EggDto> getEgg();
+
+  @GET('/api/v1/spam/getEgg2')
+  Future<EggDto> getEgg2();
+
+  @GET('/api/v1/spam/getPlant')
+  Future<PlantDto> getPlant();
+
+  @GET('/api/v1/spam/getZombieWithCast')
+  Future<List<CatDto>> getZombieWithCats();
+
+  @GET('/api/v1/spam/getLotsZombiesWithCats')
+  Future<List<List<CatDto>>> getLotsZombiesWithCats();
 }
