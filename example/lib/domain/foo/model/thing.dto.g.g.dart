@@ -1,19 +1,17 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'cat.dto.g.dart';
+part of 'thing.dto.g.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-CatDto _$CatDtoFromJson(Map<String, dynamic> json) => CatDto(
+ThingDto _$ThingDtoFromJson(Map<String, dynamic> json) => ThingDto(
       id: json['id'] as int,
       name: json['name'] as String,
-      toys: (json['toys'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$CatDtoToJson(CatDto instance) => <String, dynamic>{
+Map<String, dynamic> _$ThingDtoToJson(ThingDto instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'toys': instance.toys,
     };

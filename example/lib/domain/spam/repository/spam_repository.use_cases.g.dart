@@ -16,7 +16,6 @@
 import 'package:injectable/injectable.dart';
 import 'spam_repository.dart';
 import 'package:example/domain/spam/model/egg.dart';
-import 'package:example/domain/spam/model/zombie.dart';
 import 'package:example/domain/spam/model/cat.dart';
 import 'package:example/domain/spam/model/plant.dart';
 
@@ -87,8 +86,8 @@ class SetLotEggsUseCase {
 
   const SetLotEggsUseCase(this._repository);
 
-  void call({
-    required Future<List<Zombie<Cat>>> newEggsFuture,
+  Future<void> call({
+    required List<Cat> newEggsFuture,
   }) =>
       _repository.setLotEggs(
         newEggsFuture: newEggsFuture,
@@ -101,7 +100,7 @@ class GetEggUseCase {
 
   const GetEggUseCase(this._repository);
 
-  Egg call() => _repository.getEgg();
+  Future<Egg> call() => _repository.getEgg();
 }
 
 @injectable
@@ -110,7 +109,7 @@ class GetEgg2UseCase {
 
   const GetEgg2UseCase(this._repository);
 
-  Egg call() => _repository.getEgg2();
+  Future<Egg> call() => _repository.getEgg2();
 }
 
 @injectable
@@ -119,16 +118,16 @@ class GetPlantUseCase {
 
   const GetPlantUseCase(this._repository);
 
-  Plant call() => _repository.getPlant();
+  Future<Plant> call() => _repository.getPlant();
 }
 
 @injectable
-class GetZombieWithCastUseCase {
+class GetZombieWithCatsUseCase {
   final SpamRepository _repository;
 
-  const GetZombieWithCastUseCase(this._repository);
+  const GetZombieWithCatsUseCase(this._repository);
 
-  Zombie<Cat> call() => _repository.getZombieWithCast();
+  Future<List<Cat>> call() => _repository.getZombieWithCats();
 }
 
 @injectable
@@ -137,6 +136,5 @@ class GetLotsZombiesWithCatsUseCase {
 
   const GetLotsZombiesWithCatsUseCase(this._repository);
 
-  Future<List<Zombie<List<Cat>>>> call() =>
-      _repository.getLotsZombiesWithCats();
+  Future<List<Cat>> call() => _repository.getLotsZombiesWithCats();
 }

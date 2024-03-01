@@ -1,7 +1,3 @@
-import 'dart:io';
-
-import 'package:analyzer/dart/analysis/utilities.dart';
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dor_gen/src/utils/code_builder.dart';
@@ -59,7 +55,9 @@ class ImportBuilder {
       type.isDartCoreSymbol ||
       type.isDartCoreType ||
       type.isDartAsyncFuture ||
-      type.toString() == 'DateTime');
+      type.toString() == 'DateTime' ||
+      type.toString() == 'dynamic' ||
+      type.toString() == 'void');
 
   void addImportsToBuffer(StringBuffer buffer) {
     for (var import in _imports) {
@@ -85,18 +83,6 @@ class ImportBuilder {
       if (type.element?.librarySource != null) {
         String source = CodeBuilder.fromSourceFullNameToPackageDtoImport(type.element!.source!.fullName);
         addToImports(CodeBuilder.import(source));
-      }
-    }
-  }
-
-  void addAllImportsOfSourceFile(Element element) {
-    final file = File('..${element.source!.fullName}');
-    final fileString = file.readAsStringSync();
-    final compilationUnit = parseString(content: fileString).unit;
-
-    for (var directive in compilationUnit.directives) {
-      if (directive is ImportDirective) {
-        addToImports('import ${directive.uri};');
       }
     }
   }

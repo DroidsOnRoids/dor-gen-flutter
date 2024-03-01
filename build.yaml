@@ -23,3 +23,10 @@ builders:
     auto_apply: dependents
     build_to: source
     runs_before: ["json_serializable", "injectable","retrofit_generator"]
+  repository_implementations:
+    import: "package:dor_gen/builder.dart"
+    builder_factories: ["repositoryImplBuilder"]
+    build_extensions: {".dart": [".impl.g.dart"]}
+    auto_apply: dependents
+    build_to: source
+    runs_before: ["json_serializable", "injectable","retrofit_generator"]

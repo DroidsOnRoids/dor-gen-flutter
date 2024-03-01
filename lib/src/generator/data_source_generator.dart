@@ -27,7 +27,6 @@ class DataSourceGenerator extends GeneratorForAnnotation<DorGenerator> {
     _importBuilder.addToImports(CodeBuilder.standardIgnore());
     _importBuilder.addToImports('// Data Source for ${element.name};');
     _addStandardImportForDataSource(element: element);
-    _importBuilder.addAllImportsOfSourceFile(element);
 
     if (_shouldGenerateDataSource(annotation)) {
       final String dataSourceClassName = CodeBuilder.createNameForDataSource(element);
@@ -45,7 +44,7 @@ class DataSourceGenerator extends GeneratorForAnnotation<DorGenerator> {
       extension: ['data_source', 'g', 'g', 'dart'],
     ));
 
-    //Put together the imports and content
+    //Put together imports and content
     StringBuffer result = StringBuffer();
     StringBuffer importBuffer = StringBuffer();
     _importBuilder.addImportsToBuffer(importBuffer);
@@ -115,8 +114,17 @@ class DataSourceGenerator extends GeneratorForAnnotation<DorGenerator> {
     required String path,
   }) {
     buffer.writeln('@$apiMethod(\'$path\')');
-    buffer.writeln('${method.returnType.getDisplayString(withNullability: true)} ${method.name}(');
+    buffer.writeln('${CodeBuilder.buildDtoTypeAndAddImports(
+      importBuilder: _importBuilder,
+      type: method.returnType,
+    )} ${method.name}(');
+    if (method.parameters.isNotEmpty) {
+      buffer.write('{');
+    }
     _buildMethodArguments(buffer: buffer, method: method);
+    if (method.parameters.isNotEmpty) {
+      buffer.write('}');
+    }
     buffer.writeln(');');
     buffer.writeln('');
   }
@@ -137,7 +145,6 @@ class DataSourceGenerator extends GeneratorForAnnotation<DorGenerator> {
         if (queryValue != null) {
           buffer.write('\'$queryValue\'');
         }
-
         buffer.write(') ');
       } else if (path) {
         String? pathParamValue =
@@ -148,7 +155,13 @@ class DataSourceGenerator extends GeneratorForAnnotation<DorGenerator> {
         }
         buffer.write(') ');
       }
-      buffer.write('${parameter.type.getDisplayString(withNullability: true)} ${parameter.name}');
+      if (parameter.isRequired) {
+        buffer.write('required ');
+      }
+      buffer.write('${CodeBuilder.buildDtoTypeAndAddImports(
+        type: parameter.type,
+        importBuilder: _importBuilder,
+      )} ${parameter.name}');
       if (parameter.defaultValueCode != null) {
         buffer.write(' = ${parameter.defaultValueCode}');
       }
