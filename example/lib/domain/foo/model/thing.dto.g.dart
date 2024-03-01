@@ -12,10 +12,10 @@
 
 // ignore_for_file: unused_import
 
-// DTO for Plant;
+// DTO for Thing;
 import 'package:json_annotation/json_annotation.dart';
-import 'plant.dart';
-part 'plant.dto.g.g.dart';
+import 'thing.dart';
+part 'thing.dto.g.g.dart';
 
 @JsonSerializable(
   anyMap: null,
@@ -31,27 +31,31 @@ part 'plant.dto.g.g.dart';
   createToJson: true,
   createFactory: true,
 )
-class PlantDto {
+class ThingDto {
   final int id;
+  final String name;
 
-  const PlantDto({
+  const ThingDto({
     required this.id,
+    required this.name,
   });
 
-  Map<String, dynamic> toJson() => _$PlantDtoToJson(this);
+  Map<String, dynamic> toJson() => _$ThingDtoToJson(this);
 
-  factory PlantDto.fromJson(Map<String, dynamic> json) =>
-      _$PlantDtoFromJson(json);
+  factory ThingDto.fromJson(Map<String, dynamic> json) =>
+      _$ThingDtoFromJson(json);
 }
 
-extension PlantDtoToPlant on PlantDto {
-  Plant toDomain() => Plant(
+extension ThingDtoToThing on ThingDto {
+  Thing toDomain() => Thing(
         id: id,
+        name: name,
       );
 }
 
-extension PlantToPlantDto on Plant {
-  PlantDto toDto() => PlantDto(
+extension ThingToThingDto on Thing {
+  ThingDto toDto() => ThingDto(
         id: id,
+        name: name,
       );
 }

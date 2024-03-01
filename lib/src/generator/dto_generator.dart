@@ -2,12 +2,13 @@ import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:build/src/builder/build_step.dart';
+import 'package:build/build.dart';
 import 'package:dor_gen/src/annotations/dto.dart';
 import 'package:dor_gen/src/annotations/dto_config_annotation.dart';
 import 'package:dor_gen/src/utils/code_builder.dart';
 import 'package:dor_gen/src/utils/const_string.dart';
 import 'package:dor_gen/src/utils/errors.dart';
+import 'package:dor_gen/src/utils/field_dto.dart';
 import 'package:dor_gen/src/utils/import_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -23,13 +24,12 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     BuildStep buildStep,
   ) {
     final buffer = StringBuffer();
-
     //primary import
     _importBuilder.addToImports(CodeBuilder.standardIgnore());
     _importBuilder.addToImports('// DTO for ${element.name};');
     _importBuilder.addToImports(CodeBuilder.import('package:json_annotation/json_annotation.dart'));
     _importBuilder.addToImports(CodeBuilder.import(element.source!.shortName));
-    _importBuilder.addAllImportsOfSourceFile(element);
+
     //build dto class
     final String dtoClassName = CodeBuilder.createDtoClassNameFromClassName(element.name ?? '');
     _buildDtoClass(
@@ -47,6 +47,7 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
         dtoClassName: dtoClassName,
       );
     }
+
     //build extension mapper to dto
     if (annotation.read(ConstString.dtoConfigGenerateToDto).boolValue) {
       _buildExtensionToDto(
@@ -57,7 +58,10 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     }
 
     //last import - part
-    _importBuilder.addToImports(CodeBuilder.fromElementToGeneratedPart(element));
+    _importBuilder.addToImports(CodeBuilder.fromElementToGeneratedPart(
+      element: element,
+      extension: ['dto', 'g', 'g', 'dart'],
+    ));
 
     //build result file
     StringBuffer result = StringBuffer();
@@ -74,6 +78,7 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     required StringBuffer buffer,
   }) {
     final DartObject jsonSerializable = annotation.read(ConstString.dtoConfigJsonSerializable).objectValue;
+
     buffer.writeln('@JsonSerializable(');
     buffer.writeln('  anyMap: ${jsonSerializable.getField('anyMap')?.toBoolValue()},');
     buffer.writeln('  checked: ${jsonSerializable.getField('checked')?.toBoolValue()},');
@@ -147,7 +152,7 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     if (type.nullabilitySuffix == NullabilitySuffix.question) {
       fieldType += '?';
     }
-    _FieldDto fieldDto = _FieldDto(name: fieldType, parameters: []);
+    FieldDto fieldDto = FieldDto(name: fieldType, parameters: []);
     if (type is ParameterizedType) {
       for (var typeArgument in type.typeArguments) {
         _buildFieldTypeDtoRecursive(type: typeArgument, fieldDto: fieldDto);
@@ -186,7 +191,6 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
       } else if (defaultValue.toListValue() != null) {
         //TODO
         throw UnimplementedError('defaultValue.toListValue() not implemented yet');
-        // return defaultValue.toListValue().toString();
       } else if (defaultValue.toMapValue() != null) {
         //TODO
         throw UnimplementedError('defaultValue.toMapValue() not implemented yet');
@@ -269,6 +273,10 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     final function = functionField?.toFunctionValue();
     if (function != null) {
       if (function.enclosingElement.name != null) {
+        final enclosingElementSource = function.enclosingElement.enclosingElement?.librarySource?.uri.toString();
+        if (enclosingElementSource != null) {
+          _importBuilder.addToImports(CodeBuilder.import(enclosingElementSource));
+        }
         result += '$fieldName: ${function.enclosingElement.name}.${function.name},';
       } else {
         result += '$fieldName: ${function.name},';
@@ -280,7 +288,7 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
 
   void _buildFieldTypeDtoRecursive({
     required DartType type,
-    required _FieldDto fieldDto,
+    required FieldDto fieldDto,
   }) {
     String fieldType = '';
     if (!_importBuilder.checkIfIsNotOneOfDartCoreTypes(type)) {
@@ -293,7 +301,7 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     if (type.nullabilitySuffix == NullabilitySuffix.question) {
       fieldType += '?';
     }
-    _FieldDto field = _FieldDto(name: fieldType, parameters: []);
+    FieldDto field = FieldDto(name: fieldType, parameters: []);
     if (type is ParameterizedType) {
       for (var typeArgument in type.typeArguments) {
         _buildFieldTypeDtoRecursive(type: typeArgument, fieldDto: field);
@@ -439,8 +447,8 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
   }) {
     buffer.writeln('');
     buffer.writeln('extension ${dtoClassName}To${inputClass.name} on $dtoClassName {');
-    buffer.writeln('  $dtoClassName toDomain() =>');
-    buffer.writeln('    $dtoClassName(');
+    buffer.writeln('  ${inputClass.name} toDomain() =>');
+    buffer.writeln('    ${inputClass.name}(');
     for (final field in inputClass.children) {
       if (field is FieldElement) {
         final type = field.type;
@@ -462,48 +470,5 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     buffer.writeln('    );');
     buffer.writeln('  ');
     buffer.writeln('}');
-  }
-}
-
-class _FieldDto {
-  final String name;
-  final List<_FieldDto> parameters;
-
-  _FieldDto({
-    required this.name,
-    required this.parameters,
-  });
-
-  String toTypeString() {
-    String result = '';
-    if (parameters.isEmpty) {
-      result = name;
-    } else {
-      result += '$name<';
-      for (var parameter in parameters) {
-        result += _recursiveString(parameter);
-      }
-      result += '>';
-    }
-    return result;
-  }
-
-  String _recursiveString(_FieldDto fieldDto) {
-    String typeName = '';
-    if (fieldDto.parameters.isEmpty) {
-      typeName += fieldDto.name;
-    } else {
-      typeName += '${fieldDto.name}<';
-      for (var parameter in fieldDto.parameters) {
-        typeName += _recursiveString(parameter);
-      }
-      typeName += '>';
-    }
-    return typeName;
-  }
-
-  @override
-  String toString() {
-    return 'FieldDto{name: $name, parameters: $parameters}';
   }
 }

@@ -15,7 +15,6 @@
 // DTO for Cat;
 import 'package:json_annotation/json_annotation.dart';
 import 'cat.dart';
-import 'package:dor_gen/annotations.dart';
 part 'cat.dto.g.g.dart';
 
 @JsonSerializable(
@@ -35,10 +34,12 @@ part 'cat.dto.g.g.dart';
 class CatDto {
   final int id;
   final String name;
+  final List<String> toys;
 
   const CatDto({
     required this.id,
     required this.name,
+    required this.toys,
   });
 
   Map<String, dynamic> toJson() => _$CatDtoToJson(this);
@@ -47,9 +48,10 @@ class CatDto {
 }
 
 extension CatDtoToCat on CatDto {
-  CatDto toDomain() => CatDto(
+  Cat toDomain() => Cat(
         id: id,
         name: name,
+        toys: toys.map((e) => e).toList(growable: false),
       );
 }
 
@@ -57,5 +59,6 @@ extension CatToCatDto on Cat {
   CatDto toDto() => CatDto(
         id: id,
         name: name,
+        toys: toys.map((e) => e).toList(growable: false),
       );
 }

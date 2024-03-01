@@ -7,29 +7,34 @@
 //**************************************************************************
 
 // **************************************************************************
-// UseCasesGenerator
+// RepositoryImplGenerator
 // **************************************************************************
 
 // ignore_for_file: unused_import
 
-import 'package:example/domain/foo/model/thing.dart';
-// UseCases for FooRepository;
-import 'package:injectable/injectable.dart';
-
+// Repository implementations for FooRepository;
 import 'foo_repository.dart';
+import 'package:injectable/injectable.dart';
+import 'package:example/domain/foo/repository/foo_repository.data_source.g.dart';
+import 'package:example/domain/foo/model/thing.dart';
+import 'package:example/domain/foo/model/thing.dto.g.dart';
 
-@injectable
-class DoSomethingUseCase {
-  final FooRepository _repository;
+@LazySingleton(as: FooRepository)
+class FooRepositoryImpl implements FooRepository {
+  final FooRepositoryDataSource _dataSource;
 
-  const DoSomethingUseCase(this._repository);
+  const FooRepositoryImpl(this._dataSource);
 
-  Future<Thing> call({
+  @override
+  Future<Thing> doSomething({
     required String id,
     required String name,
-  }) =>
-      _repository.doSomething(
-        id: id,
-        name: name,
-      );
+  }) async {
+    final resultDto = await _dataSource.doSomething(
+      id: id,
+      name: name,
+    );
+    final result = resultDto.toDomain();
+    return result;
+  }
 }

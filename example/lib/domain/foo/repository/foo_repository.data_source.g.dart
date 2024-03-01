@@ -7,29 +7,29 @@
 //**************************************************************************
 
 // **************************************************************************
-// UseCasesGenerator
+// DataSourceGenerator
 // **************************************************************************
 
 // ignore_for_file: unused_import
 
-import 'package:example/domain/foo/model/thing.dart';
-// UseCases for FooRepository;
+// Data Source for FooRepository;
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-
+import 'package:retrofit/retrofit.dart';
 import 'foo_repository.dart';
+import 'package:example/domain/foo/model/thing.dart';
+import 'package:example/domain/foo/model/thing.dto.g.dart';
+part 'foo_repository.data_source.g.g.dart';
 
-@injectable
-class DoSomethingUseCase {
-  final FooRepository _repository;
+@LazySingleton()
+@RestApi()
+abstract class FooRepositoryDataSource {
+  @factoryMethod
+  factory FooRepositoryDataSource(Dio dio) = _FooRepositoryDataSource;
 
-  const DoSomethingUseCase(this._repository);
-
-  Future<Thing> call({
+  @POST('/api/v1/foo/doNothing')
+  Future<ThingDto> doSomething({
     required String id,
     required String name,
-  }) =>
-      _repository.doSomething(
-        id: id,
-        name: name,
-      );
+  });
 }

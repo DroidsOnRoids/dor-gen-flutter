@@ -19,3 +19,14 @@ class BadArgumentsError extends Error {
     return 'BadArgumentsError: $message';
   }
 }
+
+class MissingArgumentError extends Error {
+  final String message;
+
+  MissingArgumentError(this.message);
+
+  @override
+  String toString() {
+    return 'MissingArgumentError: $message';
+  }
+}

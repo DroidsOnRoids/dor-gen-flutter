@@ -9,7 +9,12 @@ class ConstString {
 \/\/*                                                                        *
 \/\/**************************************************************************''';
 
+  static const String dorGeneratorGenerateDataSource = 'generateDataSource';
+  static const String dorGeneratorGenerateRepositoryImpl = 'generateRepositoryImpl';
   static const String dorConfigGenerateUseCase = 'generateUseCase';
+  static const String dorConfigPath = 'path';
+  static const String dorConfigGenerateDataSourceMethod = 'generateDataSourceMethod';
+  static const String dorConfigApiMethod = 'apiMethod';
   static const String dtoConfigGenerateToDomain = 'generateToDomain';
   static const String dtoConfigGenerateToDto = 'generateToDto';
   static const String dtoConfigJsonSerializable = 'jsonSerializable';
