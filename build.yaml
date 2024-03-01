@@ -1,0 +1,32 @@
+# Read about `build.yaml` at https://pub.dev/packages/build_config
+builders:
+  property_use_case:
+    import: "package:dor_gen/builder.dart"
+    builder_factories: ["useCasesBuilder"]
+    build_extensions: {".dart": [".use_cases.g.dart"]}
+    auto_apply: dependents
+    build_to: source
+    runs_before: ["json_serializable", "injectable","retrofit_generator"]
+
+  dto:
+    import: "package:dor_gen/builder.dart"
+    builder_factories: ["dtoBuilder"]
+    build_extensions: {".dart": [".dto.g.dart"]}
+    auto_apply: dependents
+    build_to: source
+    runs_before: ["json_serializable", "injectable","retrofit_generator"]
+
+  data_source:
+    import: "package:dor_gen/builder.dart"
+    builder_factories: ["dataSourceBuilder"]
+    build_extensions: {".dart": [".data_source.g.dart"]}
+    auto_apply: dependents
+    build_to: source
+    runs_before: ["json_serializable", "injectable","retrofit_generator"]
+  repository_implementations:
+    import: "package:dor_gen/builder.dart"
+    builder_factories: ["repositoryImplBuilder"]
+    build_extensions: {".dart": [".impl.g.dart"]}
+    auto_apply: dependents
+    build_to: source
+    runs_before: ["json_serializable", "injectable","retrofit_generator"]

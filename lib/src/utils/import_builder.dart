@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dor_gen/src/utils/code_builder.dart';
 
@@ -19,6 +20,13 @@ class ImportBuilder {
         recursionImportsOfDartTypes(type: typeArgument);
       }
     }
+  }
+
+  void addImportsOfDartFunctionTypes({required FunctionType type}) {
+    for (var parameter in type.parameters) {
+      recursionImportsOfDartTypes(type: parameter.type);
+    }
+    recursionImportsOfDartTypes(type: type.returnType);
   }
 
   void _addImportFromType({required DartType type}) {
@@ -47,7 +55,9 @@ class ImportBuilder {
       type.isDartCoreSymbol ||
       type.isDartCoreType ||
       type.isDartAsyncFuture ||
-      type.toString() == 'DateTime');
+      type.toString() == 'DateTime' ||
+      type.toString() == 'dynamic' ||
+      type.toString() == 'void');
 
   void addImportsToBuffer(StringBuffer buffer) {
     for (var import in _imports) {
@@ -69,7 +79,7 @@ class ImportBuilder {
   }
 
   void _addImportDtoFromType(DartType type) {
-    if (checkIfIsNotOneOfDartCoreTypes(type)) {
+    if (checkIfIsNotOneOfDartCoreTypes(type) && (type.element is! EnumElement)) {
       if (type.element?.librarySource != null) {
         String source = CodeBuilder.fromSourceFullNameToPackageDtoImport(type.element!.source!.fullName);
         addToImports(CodeBuilder.import(source));

@@ -1,14 +1,12 @@
 import 'package:dor_gen/annotations.dart';
 
 @Dto()
-class Cat {
+class Thing {
   final int id;
   final String name;
-  final List<String> toys;
 
-  const Cat({
+  const Thing({
     required this.id,
     required this.name,
-    required this.toys,
   });
 }

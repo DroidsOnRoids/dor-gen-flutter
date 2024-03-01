@@ -12,8 +12,9 @@ dependencies:
   injectable: 2.3.2
   retrofit: 4.1.0
   json_annotation: 4.8.1
+  dio: 5.4.1
   dor_gen:
-    path: ../dor_gen
+    path: ../
 
 dev_dependencies:
   flutter_test:
