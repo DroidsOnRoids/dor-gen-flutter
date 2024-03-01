@@ -136,5 +136,5 @@ class GetLotsZombiesWithCatsUseCase {
 
   const GetLotsZombiesWithCatsUseCase(this._repository);
 
-  Future<List<List<Cat>>> call() => _repository.getLotsZombiesWithCats();
+  Future<List<Cat>> call() => _repository.getLotsZombiesWithCats();
 }

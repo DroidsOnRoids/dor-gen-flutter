@@ -57,5 +57,5 @@ abstract class SpamRepository {
     apiMethod: ApiMethod.GET,
     path: '/api/v1/spam/getLotsZombiesWithCats',
   )
-  Future<List<List<Cat>>> getLotsZombiesWithCats();
+  Future<List<Cat>> getLotsZombiesWithCats();
 }

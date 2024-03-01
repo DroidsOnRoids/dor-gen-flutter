@@ -14,15 +14,13 @@
 
 // Repository implementations for SpamRepository;
 import 'spam_repository.dart';
-import 'package:dor_gen/annotations.dart';
-import 'package:example/domain/spam/model/cat.dart';
-import 'package:example/domain/spam/model/egg.dart';
-import 'package:example/domain/spam/model/plant.dart';
-import 'package:retrofit/retrofit.dart';
 import 'package:injectable/injectable.dart';
 import 'package:example/domain/spam/repository/spam_repository.data_source.g.dart';
+import 'package:example/domain/spam/model/egg.dart';
 import 'package:example/domain/spam/model/egg.dto.g.dart';
+import 'package:example/domain/spam/model/cat.dart';
 import 'package:example/domain/spam/model/cat.dto.g.dart';
+import 'package:example/domain/spam/model/plant.dart';
 import 'package:example/domain/spam/model/plant.dto.g.dart';
 
 @LazySingleton(as: SpamRepository)
@@ -122,11 +120,9 @@ class SpamRepositoryImpl implements SpamRepository {
   }
 
   @override
-  Future<List<List<Cat>>> getLotsZombiesWithCats() async {
+  Future<List<Cat>> getLotsZombiesWithCats() async {
     final resultDto = await _dataSource.getLotsZombiesWithCats();
-    final result = resultDto
-        .map((e) => e.map((e) => e.toDomain()).toList(growable: false))
-        .toList(growable: false);
+    final result = resultDto.map((e) => e.toDomain()).toList(growable: false);
     return result;
   }
 }

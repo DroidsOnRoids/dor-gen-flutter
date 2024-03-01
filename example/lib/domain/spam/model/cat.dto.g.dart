@@ -15,7 +15,6 @@
 // DTO for Cat;
 import 'package:json_annotation/json_annotation.dart';
 import 'cat.dart';
-import 'package:dor_gen/annotations.dart';
 part 'cat.dto.g.g.dart';
 
 @JsonSerializable(

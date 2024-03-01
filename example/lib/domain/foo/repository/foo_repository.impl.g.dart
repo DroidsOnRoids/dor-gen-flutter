@@ -14,7 +14,6 @@
 
 // Repository implementations for FooRepository;
 import 'foo_repository.dart';
-import 'package:dor_gen/annotations.dart';
 import 'package:injectable/injectable.dart';
 import 'package:example/domain/foo/repository/foo_repository.data_source.g.dart';
 

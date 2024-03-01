@@ -27,7 +27,6 @@ class DataSourceGenerator extends GeneratorForAnnotation<DorGenerator> {
     _importBuilder.addToImports(CodeBuilder.standardIgnore());
     _importBuilder.addToImports('// Data Source for ${element.name};');
     _addStandardImportForDataSource(element: element);
-    _importBuilder.addAllImportsOfSourceFile(element);
 
     if (_shouldGenerateDataSource(annotation)) {
       final String dataSourceClassName = CodeBuilder.createNameForDataSource(element);

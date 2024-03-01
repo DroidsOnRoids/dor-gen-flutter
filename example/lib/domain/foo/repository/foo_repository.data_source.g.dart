@@ -17,7 +17,6 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 import 'foo_repository.dart';
-import 'package:dor_gen/annotations.dart';
 part 'foo_repository.data_source.g.g.dart';
 
 @LazySingleton()

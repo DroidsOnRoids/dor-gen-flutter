@@ -24,13 +24,12 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     BuildStep buildStep,
   ) {
     final buffer = StringBuffer();
-
     //primary import
     _importBuilder.addToImports(CodeBuilder.standardIgnore());
     _importBuilder.addToImports('// DTO for ${element.name};');
     _importBuilder.addToImports(CodeBuilder.import('package:json_annotation/json_annotation.dart'));
     _importBuilder.addToImports(CodeBuilder.import(element.source!.shortName));
-    _importBuilder.addAllImportsOfSourceFile(element);
+
     //build dto class
     final String dtoClassName = CodeBuilder.createDtoClassNameFromClassName(element.name ?? '');
     _buildDtoClass(
@@ -79,6 +78,7 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     required StringBuffer buffer,
   }) {
     final DartObject jsonSerializable = annotation.read(ConstString.dtoConfigJsonSerializable).objectValue;
+
     buffer.writeln('@JsonSerializable(');
     buffer.writeln('  anyMap: ${jsonSerializable.getField('anyMap')?.toBoolValue()},');
     buffer.writeln('  checked: ${jsonSerializable.getField('checked')?.toBoolValue()},');
@@ -273,6 +273,10 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     final function = functionField?.toFunctionValue();
     if (function != null) {
       if (function.enclosingElement.name != null) {
+        final enclosingElementSource = function.enclosingElement.enclosingElement?.librarySource?.uri.toString();
+        if (enclosingElementSource != null) {
+          _importBuilder.addToImports(CodeBuilder.import(enclosingElementSource));
+        }
         result += '$fieldName: ${function.enclosingElement.name}.${function.name},';
       } else {
         result += '$fieldName: ${function.name},';

@@ -15,12 +15,11 @@
 // DTO for Egg;
 import 'package:json_annotation/json_annotation.dart';
 import 'egg.dart';
-import 'package:dor_gen/annotations.dart';
-import 'package:example/domain/spam/model/cat.dart';
+import 'package:example/utils/formatter.dart';
 import 'package:example/domain/spam/model/category_enum.dart';
 import 'package:example/domain/spam/model/plant.dart';
-import 'package:example/utils/formatter.dart';
 import 'package:example/domain/spam/model/plant.dto.g.dart';
+import 'package:example/domain/spam/model/cat.dart';
 import 'package:example/domain/spam/model/cat.dto.g.dart';
 part 'egg.dto.g.g.dart';
 

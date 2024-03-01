@@ -17,12 +17,11 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 import 'spam_repository.dart';
-import 'package:dor_gen/annotations.dart';
-import 'package:example/domain/spam/model/cat.dart';
 import 'package:example/domain/spam/model/egg.dart';
-import 'package:example/domain/spam/model/plant.dart';
 import 'package:example/domain/spam/model/egg.dto.g.dart';
+import 'package:example/domain/spam/model/cat.dart';
 import 'package:example/domain/spam/model/cat.dto.g.dart';
+import 'package:example/domain/spam/model/plant.dart';
 import 'package:example/domain/spam/model/plant.dto.g.dart';
 part 'spam_repository.data_source.g.g.dart';
 
@@ -73,5 +72,5 @@ abstract class SpamRepositoryDataSource {
   Future<List<CatDto>> getZombieWithCats();
 
   @GET('/api/v1/spam/getLotsZombiesWithCats')
-  Future<List<List<CatDto>>> getLotsZombiesWithCats();
+  Future<List<CatDto>> getLotsZombiesWithCats();
 }

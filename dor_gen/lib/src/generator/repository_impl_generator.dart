@@ -24,7 +24,6 @@ class RepositoryImplGenerator extends GeneratorForAnnotation<DorGenerator> {
     _importBuilder.addToImports(CodeBuilder.standardIgnore());
     _importBuilder.addToImports('// Repository implementations for ${element.name};');
     _importBuilder.addToImports(CodeBuilder.import(element.source!.shortName));
-    _importBuilder.addAllImportsOfSourceFile(element);
     _importBuilder.addToImports(CodeBuilder.import('package:injectable/injectable.dart'));
     _importBuilder.addToImports(CodeBuilder.fromElementToDataSourceImport(element));
 
