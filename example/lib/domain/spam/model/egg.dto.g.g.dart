@@ -60,7 +60,7 @@ Map<String, dynamic> _$EggDtoToJson(EggDto instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'quantity': instance.description,
-      'image': SUPERtoJson(instance.image),
+      'image': superToJson(instance.image),
       'price': instance.price,
       'weight': instance.weight,
       'category': _$CategoryEnumEnumMap[instance.category]!,

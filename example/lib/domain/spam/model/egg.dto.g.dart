@@ -76,7 +76,7 @@ class EggDto {
     includeToJson: null,
     readValue: readFunction,
     required: null,
-    toJson: SUPERtoJson,
+    toJson: superToJson,
   )
   final String image;
   final String price;

@@ -180,7 +180,7 @@ packages:
   dor_gen:
     dependency: "direct main"
     description:
-      path: "../dor_gen"
+      path: ".."
       relative: true
     source: path
     version: "0.5.0"

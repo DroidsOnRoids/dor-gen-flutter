@@ -31,7 +31,7 @@ class Egg {
   final double description;
   @DtoConfig(
     jsonKey: JsonKey(
-      toJson: SUPERtoJson,
+      toJson: superToJson,
       fromJson: Formatter.formatCurrency,
       readValue: readFunction,
     ),
@@ -72,7 +72,7 @@ class Egg {
   });
 }
 
-String SUPERtoJson(String updatedAt) {
+String superToJson(String updatedAt) {
   return '${updatedAt}default';
 }
 
