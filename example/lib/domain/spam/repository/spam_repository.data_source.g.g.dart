@@ -83,7 +83,7 @@ class _SpamRepositoryDataSource implements SpamRepositoryDataSource {
   }
 
   @override
-  Future<List<String>> setEgg({required Egg newEgg}) async {
+  Future<List<String>> setEgg({required EggDto newEgg}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -110,7 +110,7 @@ class _SpamRepositoryDataSource implements SpamRepositoryDataSource {
   }
 
   @override
-  Future<void> setEgg2({required Egg newEgg}) async {
+  Future<void> setEgg2({required EggDto newEgg}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -134,7 +134,7 @@ class _SpamRepositoryDataSource implements SpamRepositoryDataSource {
   }
 
   @override
-  Future<void> setLotEggs({required Future<List<Cat>> newEggsFuture}) async {
+  Future<void> setLotEggs({required List<CatDto> newEggsFuture}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

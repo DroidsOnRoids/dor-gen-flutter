@@ -36,7 +36,7 @@ abstract class SpamRepository {
 
   @DorConfig(apiMethod: ApiMethod.POST, path: '/api/v1/spam/setPlant')
   Future<void> setLotEggs({
-    required Future<List<Cat>> newEggsFuture,
+    required List<Cat> newEggsFuture,
   });
   @DorConfig(apiMethod: ApiMethod.GET, path: '/api/v1/spam/getEgg')
   Future<Egg> getEgg();

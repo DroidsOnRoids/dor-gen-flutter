@@ -22,8 +22,8 @@ import 'package:example/domain/spam/model/cat.dart';
 import 'package:example/domain/spam/model/egg.dart';
 import 'package:example/domain/spam/model/plant.dart';
 import 'package:example/domain/spam/model/egg.dto.g.dart';
-import 'package:example/domain/spam/model/plant.dto.g.dart';
 import 'package:example/domain/spam/model/cat.dto.g.dart';
+import 'package:example/domain/spam/model/plant.dto.g.dart';
 part 'spam_repository.data_source.g.g.dart';
 
 @LazySingleton()
@@ -47,17 +47,17 @@ abstract class SpamRepositoryDataSource {
 
   @POST('/api/v1/spam/setEgg')
   Future<List<String>> setEgg({
-    required Egg newEgg,
+    required EggDto newEgg,
   });
 
   @POST('/api/v1/spam/setEgg2')
   Future<void> setEgg2({
-    required Egg newEgg,
+    required EggDto newEgg,
   });
 
   @POST('/api/v1/spam/setPlant')
   Future<void> setLotEggs({
-    required Future<List<Cat>> newEggsFuture,
+    required List<CatDto> newEggsFuture,
   });
 
   @GET('/api/v1/spam/getEgg')

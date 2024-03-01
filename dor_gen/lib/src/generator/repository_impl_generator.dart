@@ -103,7 +103,8 @@ class RepositoryImplGenerator extends GeneratorForAnnotation<DorGenerator> {
     }
 
     for (var parameter in method.parameters) {
-      buffer.writeln('      ${parameter.name}: ${parameter.name},');
+      buffer.writeln('      ${parameter.name}: ${parameter.name}');
+      _buildParametersMapping(buffer: buffer, type: parameter.type);
     }
     buffer.writeln('    );');
 
@@ -111,6 +112,39 @@ class RepositoryImplGenerator extends GeneratorForAnnotation<DorGenerator> {
       buffer: buffer,
       method: method,
     );
+  }
+
+  void _buildParametersMapping({
+    required StringBuffer buffer,
+    required DartType type,
+  }) {
+    _importBuilder.recursionImportsOfDartTypes(type: type);
+    _importBuilder.recursionImportsOfDtoDartTypes(type);
+    String line = '';
+    if (type.isDartCoreList) {
+      line += '.map((e)=> ';
+      line += _buildMappingForListToDto(
+        type: (type as ParameterizedType).typeArguments.first,
+        parentType: type,
+      );
+      line += ').toList(growable:false)';
+    } else if (type.element is EnumElement) {
+      line += '';
+    } else if (_importBuilder.checkIfIsNotOneOfDartCoreTypes(type)) {
+      line += '.toDto()';
+    } else if (type is ParameterizedType) {
+      if (type.typeArguments.isNotEmpty) {
+        line += _buildMappingForListToDto(
+          type: type.typeArguments.first,
+          parentType: type,
+        );
+      }
+    } else {
+      line += '';
+    }
+    buffer.write(line);
+
+    buffer.write(',');
   }
 
   void _buildReturnFromMethod({
@@ -199,6 +233,54 @@ class RepositoryImplGenerator extends GeneratorForAnnotation<DorGenerator> {
     } else if (type is ParameterizedType) {
       if (type.typeArguments.isNotEmpty) {
         result += _buildMappingForListToDomain(
+          type: type.typeArguments.first,
+          parentType: type,
+        );
+      } else {
+        if (parentType.isDartCoreList) {
+          result += 'e';
+        } else {
+          result += '';
+        }
+      }
+    } else {
+      if (parentType.isDartCoreList) {
+        result += 'e';
+      } else {
+        result += '';
+      }
+    }
+    return result;
+  }
+
+  String _buildMappingForListToDto({
+    required DartType type,
+    required DartType parentType,
+  }) {
+    String result = '';
+    if (type.isDartCoreList) {
+      if (parentType.isDartCoreList) {
+        result += 'e.map((e)=>';
+      } else {
+        result += '.map((e)=>';
+      }
+      result += _buildMappingForListToDto(type: (type as ParameterizedType).typeArguments.first, parentType: type);
+      result += ').toList(growable:false)';
+    } else if (type.element is EnumElement) {
+      if (parentType.isDartCoreList) {
+        result += 'e';
+      } else {
+        result += '';
+      }
+    } else if (_importBuilder.checkIfIsNotOneOfDartCoreTypes(type)) {
+      if (parentType.isDartCoreList) {
+        result += 'e.toDto()';
+      } else {
+        result += '.toDto()';
+      }
+    } else if (type is ParameterizedType) {
+      if (type.typeArguments.isNotEmpty) {
+        result += _buildMappingForListToDto(
           type: type.typeArguments.first,
           parentType: type,
         );

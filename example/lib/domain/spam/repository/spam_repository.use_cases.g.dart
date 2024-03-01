@@ -87,7 +87,7 @@ class SetLotEggsUseCase {
   const SetLotEggsUseCase(this._repository);
 
   Future<void> call({
-    required Future<List<Cat>> newEggsFuture,
+    required List<Cat> newEggsFuture,
   }) =>
       _repository.setLotEggs(
         newEggsFuture: newEggsFuture,

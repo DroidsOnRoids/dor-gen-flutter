@@ -159,7 +159,10 @@ class DataSourceGenerator extends GeneratorForAnnotation<DorGenerator> {
       if (parameter.isRequired) {
         buffer.write('required ');
       }
-      buffer.write('${parameter.type.getDisplayString(withNullability: true)} ${parameter.name}');
+      buffer.write('${CodeBuilder.buildDtoTypeAndAddImports(
+        type: parameter.type,
+        importBuilder: _importBuilder,
+      )} ${parameter.name}');
       if (parameter.defaultValueCode != null) {
         buffer.write(' = ${parameter.defaultValueCode}');
       }

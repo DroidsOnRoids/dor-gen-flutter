@@ -22,8 +22,8 @@ import 'package:retrofit/retrofit.dart';
 import 'package:injectable/injectable.dart';
 import 'package:example/domain/spam/repository/spam_repository.data_source.g.dart';
 import 'package:example/domain/spam/model/egg.dto.g.dart';
-import 'package:example/domain/spam/model/plant.dto.g.dart';
 import 'package:example/domain/spam/model/cat.dto.g.dart';
+import 'package:example/domain/spam/model/plant.dto.g.dart';
 
 @LazySingleton(as: SpamRepository)
 class SpamRepositoryImpl implements SpamRepository {
@@ -64,7 +64,7 @@ class SpamRepositoryImpl implements SpamRepository {
     required Egg newEgg,
   }) async {
     final resultDto = await _dataSource.setEgg(
-      newEgg: newEgg,
+      newEgg: newEgg.toDto(),
     );
     final result = resultDto.map((e) => e).toList(growable: false);
     return result;
@@ -75,7 +75,7 @@ class SpamRepositoryImpl implements SpamRepository {
     required Egg newEgg,
   }) async {
     final resultDto = await _dataSource.setEgg2(
-      newEgg: newEgg,
+      newEgg: newEgg.toDto(),
     );
     final result = resultDto;
     return result;
@@ -83,10 +83,11 @@ class SpamRepositoryImpl implements SpamRepository {
 
   @override
   Future<void> setLotEggs({
-    required Future<List<Cat>> newEggsFuture,
+    required List<Cat> newEggsFuture,
   }) async {
     final resultDto = await _dataSource.setLotEggs(
-      newEggsFuture: newEggsFuture,
+      newEggsFuture:
+          newEggsFuture.map((e) => e.toDto()).toList(growable: false),
     );
     final result = resultDto;
     return result;
