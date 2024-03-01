@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:build/src/builder/build_step.dart';
+import 'package:build/build.dart';
 import 'package:dor_gen/src/annotations/dor_config_annotation.dart';
 import 'package:dor_gen/src/annotations/dor_generator_annotation.dart';
 import 'package:dor_gen/src/utils/code_builder.dart';
@@ -20,7 +20,7 @@ class UseCasesGenerator extends GeneratorForAnnotation<DorGenerator> {
     BuildStep buildStep,
   ) {
     final buffer = StringBuffer();
-
+    _importBuilder.addToImports(CodeBuilder.standardIgnore());
     _importBuilder.addToImports('// UseCases for ${element.name};');
 
     if (_shouldGenerateUseCases(annotation)) {

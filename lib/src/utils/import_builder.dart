@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dor_gen/src/utils/code_builder.dart';
 
@@ -21,8 +22,15 @@ class ImportBuilder {
     }
   }
 
+  void addImportsOfDartFunctionTypes({required FunctionType type}) {
+    for (var parameter in type.parameters) {
+      recursionImportsOfDartTypes(type: parameter.type);
+    }
+    recursionImportsOfDartTypes(type: type.returnType);
+  }
+
   void _addImportFromType({required DartType type}) {
-    if (_checkIfIsOneOfDartCoreTypes(type)) {
+    if (checkIfIsNotOneOfDartCoreTypes(type)) {
       if (type.element?.librarySource != null) {
         String source = CodeBuilder.fromSourceFullNameToPackageImport(type.element!.source!.fullName);
         addToImports(CodeBuilder.import(source));
@@ -30,7 +38,7 @@ class ImportBuilder {
     }
   }
 
-  bool _checkIfIsOneOfDartCoreTypes(DartType type) => !(type.isDartCoreBool ||
+  bool checkIfIsNotOneOfDartCoreTypes(DartType type) => !(type.isDartCoreBool ||
       type.isDartCoreDouble ||
       type.isDartCoreEnum ||
       type.isDartCoreFunction ||
@@ -46,7 +54,10 @@ class ImportBuilder {
       type.isDartCoreString ||
       type.isDartCoreSymbol ||
       type.isDartCoreType ||
-      type.isDartAsyncFuture);
+      type.isDartAsyncFuture ||
+      type.toString() == 'DateTime' ||
+      type.toString() == 'dynamic' ||
+      type.toString() == 'void');
 
   void addImportsToBuffer(StringBuffer buffer) {
     for (var import in _imports) {
@@ -56,5 +67,23 @@ class ImportBuilder {
 
   void clearImports() {
     _imports.clear();
+  }
+
+  void recursionImportsOfDtoDartTypes(DartType type) {
+    _addImportDtoFromType(type);
+    if (type is ParameterizedType) {
+      for (var typeArgument in type.typeArguments) {
+        recursionImportsOfDtoDartTypes(typeArgument);
+      }
+    }
+  }
+
+  void _addImportDtoFromType(DartType type) {
+    if (checkIfIsNotOneOfDartCoreTypes(type) && (type.element is! EnumElement)) {
+      if (type.element?.librarySource != null) {
+        String source = CodeBuilder.fromSourceFullNameToPackageDtoImport(type.element!.source!.fullName);
+        addToImports(CodeBuilder.import(source));
+      }
+    }
   }
 }
