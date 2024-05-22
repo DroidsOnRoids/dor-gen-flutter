@@ -165,8 +165,10 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     if (jsonKeyAnnotation.isNotEmpty) {
       buffer.writeln('  $jsonKeyAnnotation');
     }
-
-    if (field.isFinal) {
+    if (field.name == 'props') {
+      // assume that when class has props field it comes from equatable package
+      // TODO(mdembny): add better support for equatable package
+    } else if (field.isFinal) {
       buffer.writeln('  final $fieldType ${field.name};');
     } else {
       buffer.writeln('  $fieldType ${field.name};');
@@ -322,13 +324,17 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
       buffer.writeln('  ${CodeBuilder.createDtoClassNameFromClassName(inputClass.name!)}({');
     }
     for (final parameter in constructor.parameters) {
-      if (!parameter.isNamed) {
-        throw UnnamedParameterError(inputClass.name!);
-      }
-      if (parameter.isRequired) {
-        buffer.writeln('    required this.${parameter.name},');
-      } else {
-        buffer.writeln('    this.${parameter.name},');
+      // assume that when class has props field it comes from equatable package
+      // TODO(mdembny): add better support for equatable package
+      if (parameter.name != 'props') {
+        if (!parameter.isNamed) {
+          throw UnnamedParameterError(inputClass.name!);
+        }
+        if (parameter.isRequired) {
+          buffer.writeln('    required this.${parameter.name},');
+        } else {
+          buffer.writeln('    this.${parameter.name},');
+        }
       }
     }
 
@@ -386,7 +392,9 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     buffer.writeln('  $dtoClassName toDto() =>');
     buffer.writeln('    $dtoClassName(');
     for (final field in inputClass.children) {
-      if (field is FieldElement) {
+      // assume that when class has props field it comes from equatable package
+      // TODO(mdembny): add better support for equatable package
+      if (field is FieldElement && field.name != 'props') {
         final type = field.type;
         String line = '';
         if (type.isDartCoreList) {
@@ -450,7 +458,9 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     buffer.writeln('  ${inputClass.name} toDomain() =>');
     buffer.writeln('    ${inputClass.name}(');
     for (final field in inputClass.children) {
-      if (field is FieldElement) {
+      // assume that when class has props field it comes from equatable package
+      // TODO(mdembny): add better support for equatable package
+      if (field is FieldElement && field.name != 'props') {
         final type = field.type;
         String line = '';
         if (type.isDartCoreList) {

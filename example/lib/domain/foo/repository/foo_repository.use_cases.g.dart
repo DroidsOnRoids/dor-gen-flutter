@@ -12,11 +12,10 @@
 
 // ignore_for_file: unused_import
 
-import 'package:example/domain/foo/model/thing.dart';
 // UseCases for FooRepository;
 import 'package:injectable/injectable.dart';
-
 import 'foo_repository.dart';
+import 'package:example/domain/foo/model/thing.dart';
 
 @injectable
 class DoSomethingUseCase {

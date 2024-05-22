@@ -1,7 +1,8 @@
 import 'package:dor_gen/annotations.dart';
+import 'package:equatable/equatable.dart';
 
 @Dto()
-class Thing {
+class Thing extends Equatable {
   final int id;
   final String name;
 
@@ -9,4 +10,10 @@ class Thing {
     required this.id,
     required this.name,
   });
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+      ];
 }
