@@ -1,7 +1,7 @@
 import 'package:dor_gen/annotations.dart';
 import 'package:equatable/equatable.dart';
 
-@Dto()
+@Dto(generateToDto: false)
 class Thing extends Equatable {
   final int id;
   final String name;

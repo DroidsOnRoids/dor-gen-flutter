@@ -345,11 +345,18 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     required StringBuffer buffer,
     required Element inputClass,
     required String dtoClassName,
+    required bool toJson,
+    required bool fromJson,
   }) {
-    buffer.writeln('  Map<String, dynamic> toJson() => _\$${dtoClassName}ToJson(this);');
-    buffer.writeln('');
-    buffer.writeln('  factory $dtoClassName.fromJson(Map<String, dynamic> json) => _\$${dtoClassName}FromJson(json);');
-    buffer.writeln('');
+    if (toJson) {
+      buffer.writeln('  Map<String, dynamic> toJson() => _\$${dtoClassName}ToJson(this);');
+      buffer.writeln('');
+    }
+    if (fromJson) {
+      buffer
+          .writeln('  factory $dtoClassName.fromJson(Map<String, dynamic> json) => _\$${dtoClassName}FromJson(json);');
+      buffer.writeln('');
+    }
   }
 
   void _buildDtoClass({
@@ -377,6 +384,8 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
       buffer: buffer,
       inputClass: inputClass,
       dtoClassName: dtoClassName,
+      toJson: annotation.read(ConstString.dtoConfigGenerateToDto).boolValue,
+      fromJson: annotation.read(ConstString.dtoConfigGenerateToDomain).boolValue,
     );
 
     buffer.write('}');
