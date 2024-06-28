@@ -104,7 +104,8 @@ class EggDto {
   final DateTime createdAt;
   final List<double> updatedAt;
   final PlantDto plant;
-  final List<List<CatDto>> cats;
+  final List<List<CatDto?>> cats;
+  final CatDto? cat;
 
   EggDto({
     required this.cats,
@@ -119,6 +120,7 @@ class EggDto {
     required this.category2,
     required this.createdAt,
     required this.updatedAt,
+    required this.cat,
   });
 
   Map<String, dynamic> toJson() => _$EggDtoToJson(this);
@@ -140,8 +142,9 @@ extension EggDtoToEgg on EggDto {
         updatedAt: updatedAt.map((e) => e).toList(growable: false),
         plant: plant.toDomain(),
         cats: cats
-            .map((e) => e.map((e) => e.toDomain()).toList(growable: false))
+            .map((e) => e.map((e) => e?.toDomain()).toList(growable: false))
             .toList(growable: false),
+        cat: cat?.toDomain(),
       );
 }
 
@@ -159,7 +162,8 @@ extension EggToEggDto on Egg {
         updatedAt: updatedAt.map((e) => e).toList(growable: false),
         plant: plant.toDto(),
         cats: cats
-            .map((e) => e.map((e) => e.toDto()).toList(growable: false))
+            .map((e) => e.map((e) => e?.toDto()).toList(growable: false))
             .toList(growable: false),
+        cat: cat?.toDto(),
       );
 }

@@ -54,7 +54,8 @@ class Egg {
   final DateTime createdAt;
   final List<double> updatedAt;
   final Plant plant;
-  final List<List<Cat>> cats;
+  final List<List<Cat?>> cats;
+  final Cat? cat;
 
   Egg({
     required this.cats,
@@ -69,6 +70,7 @@ class Egg {
     required this.category2,
     required this.createdAt,
     required this.updatedAt,
+    required this.cat,
   });
 }
 

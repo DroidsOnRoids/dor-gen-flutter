@@ -15,7 +15,9 @@ EggDto _$EggDtoFromJson(Map<String, dynamic> json) => $checkedCreate(
               'cats',
               (v) => (v as List<dynamic>)
                   .map((e) => (e as List<dynamic>)
-                      .map((e) => CatDto.fromJson(e as Map<String, dynamic>))
+                      .map((e) => e == null
+                          ? null
+                          : CatDto.fromJson(e as Map<String, dynamic>))
                       .toList())
                   .toList()),
           plant: $checkedConvert(
@@ -46,6 +48,11 @@ EggDto _$EggDtoFromJson(Map<String, dynamic> json) => $checkedCreate(
               (v) => (v as List<dynamic>)
                   .map((e) => (e as num).toDouble())
                   .toList()),
+          cat: $checkedConvert(
+              'cat',
+              (v) => v == null
+                  ? null
+                  : CatDto.fromJson(v as Map<String, dynamic>)),
         );
         return val;
       },
@@ -69,6 +76,7 @@ Map<String, dynamic> _$EggDtoToJson(EggDto instance) => <String, dynamic>{
       'updated-at': instance.updatedAt,
       'plant': instance.plant,
       'cats': instance.cats,
+      'cat': instance.cat,
     };
 
 const _$CategoryEnumEnumMap = {

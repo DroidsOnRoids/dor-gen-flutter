@@ -413,7 +413,9 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
         } else if (type.element is EnumElement) {
           line += '      ${field.name}: ${field.name},';
         } else if (_importBuilder.checkIfIsNotOneOfDartCoreTypes(field.type)) {
-          line += '      ${field.name}: ${field.name}.toDto(),';
+          field.type.nullabilitySuffix == NullabilitySuffix.question
+              ? line += '      ${field.name}: ${field.name}?.toDto(),'
+              : line += '      ${field.name}: ${field.name}.toDto(),';
         } else {
           line += '      ${field.name}: ${field.name},';
         }
@@ -434,7 +436,7 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     } else if (type.element is EnumElement) {
       result += 'e';
     } else if (_importBuilder.checkIfIsNotOneOfDartCoreTypes(type)) {
-      result += ' e.toDto()';
+      type.nullabilitySuffix == NullabilitySuffix.question ? result += ' e?.toDto()' : result += ' e.toDto()';
     } else {
       result += 'e';
     }
@@ -450,7 +452,7 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     } else if (type.element is EnumElement) {
       result += 'e';
     } else if (_importBuilder.checkIfIsNotOneOfDartCoreTypes(type)) {
-      result += ' e.toDomain()';
+      type.nullabilitySuffix == NullabilitySuffix.question ? result += ' e?.toDomain()' : result += ' e.toDomain()';
     } else {
       result += 'e';
     }
@@ -479,7 +481,9 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
         } else if (type.element is EnumElement) {
           line += '      ${field.name}: ${field.name},';
         } else if (_importBuilder.checkIfIsNotOneOfDartCoreTypes(field.type)) {
-          line += '      ${field.name}: ${field.name}.toDomain(),';
+          field.type.nullabilitySuffix == NullabilitySuffix.question
+              ? line += '      ${field.name}: ${field.name}?.toDomain(),'
+              : line += '      ${field.name}: ${field.name}.toDomain(),';
         } else {
           line += '      ${field.name}: ${field.name},';
         }
