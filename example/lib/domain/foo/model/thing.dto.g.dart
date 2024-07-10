@@ -28,17 +28,21 @@ part 'thing.dto.g.g.dart';
   includeIfNull: null,
   genericArgumentFactories: null,
   createPerFieldToJson: null,
-  createToJson: false,
+  createToJson: true,
   createFactory: true,
 )
 class ThingDto {
   final int id;
   final String name;
+  final List<String>? description;
 
   const ThingDto({
     required this.id,
     required this.name,
+    required this.description,
   });
+
+  Map<String, dynamic> toJson() => _$ThingDtoToJson(this);
 
   factory ThingDto.fromJson(Map<String, dynamic> json) =>
       _$ThingDtoFromJson(json);
@@ -48,5 +52,14 @@ extension ThingDtoToThing on ThingDto {
   Thing toDomain() => Thing(
         id: id,
         name: name,
+        description: description?.map((e) => e).toList(growable: false),
+      );
+}
+
+extension ThingToThingDto on Thing {
+  ThingDto toDto() => ThingDto(
+        id: id,
+        name: name,
+        description: description?.map((e) => e).toList(growable: false),
       );
 }

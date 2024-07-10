@@ -149,9 +149,6 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     } else {
       fieldType = '${type.element?.name ?? ''}Dto';
     }
-    if (type.nullabilitySuffix == NullabilitySuffix.question) {
-      fieldType += '?';
-    }
     FieldDto fieldDto = FieldDto(name: fieldType, parameters: []);
     if (type is ParameterizedType) {
       for (var typeArgument in type.typeArguments) {
@@ -160,6 +157,9 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     }
 
     fieldType = fieldDto.toTypeString();
+    if (type.nullabilitySuffix == NullabilitySuffix.question) {
+      fieldType += '?';
+    }
 
     final String jsonKeyAnnotation = _buildJsonKeyAnnotation(fieldElement: field);
     if (jsonKeyAnnotation.isNotEmpty) {
@@ -407,7 +407,11 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
         final type = field.type;
         String line = '';
         if (type.isDartCoreList) {
-          line += '      ${field.name}: ${field.name}.map((e)=> ';
+          if (type.nullabilitySuffix == NullabilitySuffix.question) {
+            line += '      ${field.name}: ${field.name}?.map((e)=> ';
+          } else {
+            line += '      ${field.name}: ${field.name}.map((e)=> ';
+          }
           line += _buildMappingForListToDto(type: (type as ParameterizedType).typeArguments.first);
           line += ').toList(growable:false),';
         } else if (type.element is EnumElement) {
@@ -430,7 +434,11 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
   String _buildMappingForListToDto({required DartType type}) {
     String result = '';
     if (type.isDartCoreList) {
-      result += 'e.map((e)=>';
+      if (type.nullabilitySuffix == NullabilitySuffix.question) {
+        result += 'e?.map((e)=>';
+      } else {
+        result += 'e.map((e)=>';
+      }
       result += _buildMappingForListToDto(type: (type as ParameterizedType).typeArguments.first);
       result += ').toList(growable:false)';
     } else if (type.element is EnumElement) {
@@ -446,7 +454,11 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
   String _buildMappingForListToDomain({required DartType type}) {
     String result = '';
     if (type.isDartCoreList) {
-      result += 'e.map((e)=>';
+      if (type.nullabilitySuffix == NullabilitySuffix.question) {
+        result += 'e?.map((e)=>';
+      } else {
+        result += 'e.map((e)=>';
+      }
       result += _buildMappingForListToDomain(type: (type as ParameterizedType).typeArguments.first);
       result += ').toList(growable:false)';
     } else if (type.element is EnumElement) {
@@ -475,7 +487,11 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
         final type = field.type;
         String line = '';
         if (type.isDartCoreList) {
-          line += '      ${field.name}: ${field.name}.map((e)=> ';
+          if (type.nullabilitySuffix == NullabilitySuffix.question) {
+            line += '      ${field.name}: ${field.name}?.map((e)=> ';
+          } else {
+            line += '      ${field.name}: ${field.name}.map((e)=> ';
+          }
           line += _buildMappingForListToDomain(type: (type as ParameterizedType).typeArguments.first);
           line += ').toList(growable:false),';
         } else if (type.element is EnumElement) {

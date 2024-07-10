@@ -12,8 +12,12 @@ Dodanie prymitywnego wsparcia dla paczki Equatable
 
 ### 0.5.2
 
-Fix błędu: generaownie metody toJson w klasie Dto mimo ustawionej flagi żeby tego nie robić
+Fix błędu: generowanie metody toJson w klasie Dto mimo ustawionej flagi żeby tego nie robić
 
 ### 0.5.3
 
 Fix błędu: umozliwienie dodawania nullable field o customowych typach
+
+### 0.5.4
+
+Fix błędu: umozliwienie dodania listy nullowalnej List<Something>?
