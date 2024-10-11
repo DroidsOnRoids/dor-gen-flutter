@@ -21,3 +21,7 @@ Fix błędu: umozliwienie dodawania nullable field o customowych typach
 ### 0.5.4
 
 Fix błędu: umozliwienie dodania listy nullowalnej List<Something>?
+
+### 0.5.5
+
+Dodanie parametru PATCH

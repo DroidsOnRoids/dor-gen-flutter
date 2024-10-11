@@ -18,4 +18,5 @@ enum ApiMethod {
   POST,
   PUT,
   DELETE,
+  PATCH,
 }
