@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:build/src/builder/build_step.dart';
+import 'package:build/build.dart';
 import 'package:dor_gen/annotations.dart';
 import 'package:dor_gen/src/utils/code_builder.dart';
 import 'package:dor_gen/src/utils/const_string.dart';

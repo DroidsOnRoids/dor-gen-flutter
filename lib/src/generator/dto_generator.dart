@@ -274,12 +274,12 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     String result = '';
     final function = functionField?.toFunctionValue();
     if (function != null) {
-      if (function.enclosingElement.name != null) {
-        final enclosingElementSource = function.enclosingElement.enclosingElement?.librarySource?.uri.toString();
+      if (function.enclosingElement3.name != null) {
+        final enclosingElementSource = function.enclosingElement3.enclosingElement3?.librarySource?.uri.toString();
         if (enclosingElementSource != null) {
           _importBuilder.addToImports(CodeBuilder.import(enclosingElementSource));
         }
-        result += '$fieldName: ${function.enclosingElement.name}.${function.name},';
+        result += '$fieldName: ${function.enclosingElement3.name}.${function.name},';
       } else {
         result += '$fieldName: ${function.name},';
       }
