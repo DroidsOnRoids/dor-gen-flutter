@@ -1,4 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
+
 //
 //**************************************************************************
 //*                                                                        *
@@ -34,9 +36,7 @@ part 'plant.dto.g.g.dart';
 class PlantDto {
   final int id;
 
-  const PlantDto({
-    required this.id,
-  });
+  const PlantDto({required this.id});
 
   Map<String, dynamic> toJson() => _$PlantDtoToJson(this);
 
@@ -45,13 +45,9 @@ class PlantDto {
 }
 
 extension PlantDtoToPlant on PlantDto {
-  Plant toDomain() => Plant(
-        id: id,
-      );
+  Plant toDomain() => Plant(id: id);
 }
 
 extension PlantToPlantDto on Plant {
-  PlantDto toDto() => PlantDto(
-        id: id,
-      );
+  PlantDto toDto() => PlantDto(id: id);
 }

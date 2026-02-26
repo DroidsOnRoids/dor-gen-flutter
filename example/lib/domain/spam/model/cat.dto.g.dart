@@ -1,4 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
+
 //
 //**************************************************************************
 //*                                                                        *
@@ -36,11 +38,7 @@ class CatDto {
   final String name;
   final List<String> toys;
 
-  const CatDto({
-    required this.id,
-    required this.name,
-    required this.toys,
-  });
+  const CatDto({required this.id, required this.name, required this.toys});
 
   Map<String, dynamic> toJson() => _$CatDtoToJson(this);
 
@@ -48,17 +46,14 @@ class CatDto {
 }
 
 extension CatDtoToCat on CatDto {
-  Cat toDomain() => Cat(
-        id: id,
-        name: name,
-        toys: toys.map((e) => e).toList(growable: false),
-      );
+  Cat toDomain() =>
+      Cat(id: id, name: name, toys: toys.map((e) => e).toList(growable: false));
 }
 
 extension CatToCatDto on Cat {
   CatDto toDto() => CatDto(
-        id: id,
-        name: name,
-        toys: toys.map((e) => e).toList(growable: false),
-      );
+    id: id,
+    name: name,
+    toys: toys.map((e) => e).toList(growable: false),
+  );
 }

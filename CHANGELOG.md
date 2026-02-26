@@ -25,3 +25,7 @@ Fix błędu: umozliwienie dodania listy nullowalnej List<Something>?
 ### 0.5.5
 
 Dodanie parametru PATCH
+
+### 1.0.0
+
+BREAKING CHANGE - nowe wymagania wersji paczek zaleznych

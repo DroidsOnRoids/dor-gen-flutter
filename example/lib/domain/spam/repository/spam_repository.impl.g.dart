@@ -1,4 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
+
 //
 //**************************************************************************
 //*                                                                        *
@@ -58,34 +60,25 @@ class SpamRepositoryImpl implements SpamRepository {
   }
 
   @override
-  Future<List<String>> setEgg({
-    required Egg newEgg,
-  }) async {
-    final resultDto = await _dataSource.setEgg(
-      newEgg: newEgg.toDto(),
-    );
+  Future<List<String>> setEgg({required Egg newEgg}) async {
+    final resultDto = await _dataSource.setEgg(newEgg: newEgg.toDto());
     final result = resultDto.map((e) => e).toList(growable: false);
     return result;
   }
 
   @override
-  Future<void> setEgg2({
-    required Egg newEgg,
-  }) async {
-    final resultDto = await _dataSource.setEgg2(
-      newEgg: newEgg.toDto(),
-    );
+  Future<void> setEgg2({required Egg newEgg}) async {
+    final resultDto = await _dataSource.setEgg2(newEgg: newEgg.toDto());
     final result = resultDto;
     return result;
   }
 
   @override
-  Future<void> setLotEggs({
-    required List<Cat> newEggsFuture,
-  }) async {
+  Future<void> setLotEggs({required List<Cat> newEggsFuture}) async {
     final resultDto = await _dataSource.setLotEggs(
-      newEggsFuture:
-          newEggsFuture.map((e) => e.toDto()).toList(growable: false),
+      newEggsFuture: newEggsFuture
+          .map((e) => e.toDto())
+          .toList(growable: false),
     );
     final result = resultDto;
     return result;

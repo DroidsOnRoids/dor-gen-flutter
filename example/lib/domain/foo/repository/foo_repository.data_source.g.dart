@@ -1,4 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
+
 //
 //**************************************************************************
 //*                                                                        *
@@ -28,8 +30,5 @@ abstract class FooRepositoryDataSource {
   factory FooRepositoryDataSource(Dio dio) = _FooRepositoryDataSource;
 
   @POST('/api/v1/foo/doNothing')
-  Future<ThingDto> doSomething({
-    required String id,
-    required String name,
-  });
+  Future<ThingDto> doSomething({required String id, required String name});
 }

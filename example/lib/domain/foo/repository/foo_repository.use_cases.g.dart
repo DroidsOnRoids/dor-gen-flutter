@@ -1,4 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
+
 //
 //**************************************************************************
 //*                                                                        *
@@ -23,12 +25,6 @@ class DoSomethingUseCase {
 
   const DoSomethingUseCase(this._repository);
 
-  Future<Thing> call({
-    required String id,
-    required String name,
-  }) =>
-      _repository.doSomething(
-        id: id,
-        name: name,
-      );
+  Future<Thing> call({required String id, required String name}) =>
+      _repository.doSomething(id: id, name: name);
 }

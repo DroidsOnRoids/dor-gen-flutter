@@ -1,4 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
+
 //
 //**************************************************************************
 //*                                                                        *
@@ -41,15 +43,14 @@ class DoSomethingElseUseCase {
     int? param4,
     int? param5,
     int? param6,
-  }) =>
-      _repository.doSomethingElse(
-        param1: param1,
-        param2: param2,
-        param3: param3,
-        param4: param4,
-        param5: param5,
-        param6: param6,
-      );
+  }) => _repository.doSomethingElse(
+    param1: param1,
+    param2: param2,
+    param3: param3,
+    param4: param4,
+    param5: param5,
+    param6: param6,
+  );
 }
 
 @injectable
@@ -58,12 +59,8 @@ class SetEggUseCase {
 
   const SetEggUseCase(this._repository);
 
-  Future<List<String>> call({
-    required Egg newEgg,
-  }) =>
-      _repository.setEgg(
-        newEgg: newEgg,
-      );
+  Future<List<String>> call({required Egg newEgg}) =>
+      _repository.setEgg(newEgg: newEgg);
 }
 
 @injectable
@@ -72,12 +69,8 @@ class SetEgg2UseCase {
 
   const SetEgg2UseCase(this._repository);
 
-  Future<void> call({
-    required Egg newEgg,
-  }) =>
-      _repository.setEgg2(
-        newEgg: newEgg,
-      );
+  Future<void> call({required Egg newEgg}) =>
+      _repository.setEgg2(newEgg: newEgg);
 }
 
 @injectable
@@ -86,12 +79,8 @@ class SetLotEggsUseCase {
 
   const SetLotEggsUseCase(this._repository);
 
-  Future<void> call({
-    required List<Cat> newEggsFuture,
-  }) =>
-      _repository.setLotEggs(
-        newEggsFuture: newEggsFuture,
-      );
+  Future<void> call({required List<Cat> newEggsFuture}) =>
+      _repository.setLotEggs(newEggsFuture: newEggsFuture);
 }
 
 @injectable

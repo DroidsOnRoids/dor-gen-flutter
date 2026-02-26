@@ -24,7 +24,7 @@ class CodeBuilder {
   }
 
   static String fromElementToDataSourceImport(Element element) {
-    String source = element.librarySource!.fullName;
+    String source = element.library!.firstFragment.source.fullName;
     var splitSource = source.split('/');
     var positionToDelete = splitSource.indexOf('lib');
     if (positionToDelete != -1) {
@@ -67,7 +67,7 @@ class CodeBuilder {
     required Element element,
     required List<String> extension,
   }) {
-    String source = element.librarySource!.fullName;
+    String source = element.library!.firstFragment.source.fullName;
     var splitSource = source.split('/');
     source = splitSource.last;
     splitSource = source.split('.');
@@ -80,12 +80,12 @@ class CodeBuilder {
 
   static String toUpperFirstLetter(String text) => text.substring(0, 1).toUpperCase() + text.substring(1);
 
-  static String createUseCaseNameFromMethod(MethodElement method) => '${toUpperFirstLetter(method.name)}UseCase';
+  static String createUseCaseNameFromMethod(MethodElement method) => '${toUpperFirstLetter(method.name ?? '')}UseCase';
 
   static String createDtoClassNameFromClassName(String className) => '${toUpperFirstLetter(className)}Dto';
 
   static String createFieldTypeDtoNameFromField(FieldElement field) {
-    final String fieldTypeName = field.type.getDisplayString(withNullability: false);
+    final String fieldTypeName = field.type.getDisplayString();
     if (field.type.nullabilitySuffix == NullabilitySuffix.none) {
       return '${fieldTypeName}Dto';
     }

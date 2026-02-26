@@ -1,25 +1,25 @@
 name: dor_gen
 description: "DroidsOnRoids code generator for Flutter."
-version: 0.5.4
+version: 1.0.0
 homepage:
 
 environment:
-  sdk: '>=3.2.3 <4.0.0'
-  flutter: ">=1.17.0"
+  sdk: ">=3.2.3 <4.0.0"
+  flutter: ">=3.41.2"
 
 dependencies:
   flutter:
     sdk: flutter
-  source_gen: ^2.0.0
-  json_annotation: '>=4.0.0'
-  retrofit: '>=4.0.0'
-  analyzer: ^7.0.0
-  build: ^2.0.0
+  source_gen: ">=4.2.0"
+  json_annotation: ">=4.11.0"
+  retrofit: ">=4.9.2"
+  analyzer: "<=10.1.0"
+  build: ">=4.0.4"
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: '>=2.0.0'
-  retrofit_generator: '>=9.0.0'
+  flutter_lints: ">=6.0.0"
+  retrofit_generator: ">=10.2.3"
 
 flutter:

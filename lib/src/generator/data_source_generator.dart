@@ -8,16 +8,16 @@ import 'package:dor_gen/src/utils/import_builder.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:source_gen/source_gen.dart';
 
-const TypeChecker _dorConfigChecker = TypeChecker.fromRuntime(DorConfig);
-const TypeChecker _bodyChecker = TypeChecker.fromRuntime(Body);
-const TypeChecker _queryChecker = TypeChecker.fromRuntime(Query);
-const TypeChecker _pathParametersChecker = TypeChecker.fromRuntime(Path);
+const TypeChecker _dorConfigChecker = TypeChecker.typeNamed(DorConfig);
+const TypeChecker _bodyChecker = TypeChecker.typeNamed(Body);
+const TypeChecker _queryChecker = TypeChecker.typeNamed(Query);
+const TypeChecker _pathParametersChecker = TypeChecker.typeNamed(Path);
 
 class DataSourceGenerator extends GeneratorForAnnotation<DorGenerator> {
   final ImportBuilder _importBuilder = ImportBuilder();
 
   @override
-  generateForAnnotatedElement(
+  String generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
@@ -62,7 +62,7 @@ class DataSourceGenerator extends GeneratorForAnnotation<DorGenerator> {
     _importBuilder.addToImports(CodeBuilder.import('package:dio/dio.dart'));
     _importBuilder.addToImports(CodeBuilder.import('package:injectable/injectable.dart'));
     _importBuilder.addToImports(CodeBuilder.import('package:retrofit/retrofit.dart'));
-    _importBuilder.addToImports(CodeBuilder.import(element.source!.shortName));
+    _importBuilder.addToImports(CodeBuilder.import(element.firstFragment.libraryFragment!.source.shortName));
   }
 
   _buildDataSourceClass({
@@ -118,11 +118,11 @@ class DataSourceGenerator extends GeneratorForAnnotation<DorGenerator> {
       importBuilder: _importBuilder,
       type: method.returnType,
     )} ${method.name}(');
-    if (method.parameters.isNotEmpty) {
+    if (method.formalParameters.isNotEmpty) {
       buffer.write('{');
     }
     _buildMethodArguments(buffer: buffer, method: method);
-    if (method.parameters.isNotEmpty) {
+    if (method.formalParameters.isNotEmpty) {
       buffer.write('}');
     }
     buffer.writeln(');');
@@ -133,7 +133,7 @@ class DataSourceGenerator extends GeneratorForAnnotation<DorGenerator> {
     required StringBuffer buffer,
     required MethodElement method,
   }) {
-    for (var parameter in method.parameters) {
+    for (var parameter in method.formalParameters) {
       final body = _bodyChecker.hasAnnotationOfExact(parameter);
       final query = _queryChecker.hasAnnotationOfExact(parameter);
       final path = _pathParametersChecker.hasAnnotationOfExact(parameter);

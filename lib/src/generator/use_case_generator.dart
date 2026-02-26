@@ -8,7 +8,7 @@ import 'package:dor_gen/src/utils/errors.dart';
 import 'package:dor_gen/src/utils/import_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
-const TypeChecker _dorConfigChecker = TypeChecker.fromRuntime(DorConfig);
+const TypeChecker _dorConfigChecker = TypeChecker.typeNamed(DorConfig);
 
 class UseCasesGenerator extends GeneratorForAnnotation<DorGenerator> {
   final ImportBuilder _importBuilder = ImportBuilder();
@@ -51,7 +51,7 @@ class UseCasesGenerator extends GeneratorForAnnotation<DorGenerator> {
     required Element element,
   }) {
     _importBuilder.addToImports(CodeBuilder.import('package:injectable/injectable.dart'));
-    _importBuilder.addToImports(CodeBuilder.import(element.source!.shortName));
+    _importBuilder.addToImports(CodeBuilder.import(element.firstFragment.libraryFragment!.source.shortName));
   }
 
   bool _shouldGenerateUseCases(ConstantReader annotation) =>
@@ -98,17 +98,17 @@ class UseCasesGenerator extends GeneratorForAnnotation<DorGenerator> {
 
   String _buildDefineParametersListAndAddImportOfParametersType({required MethodElement method}) {
     String parameters = '';
-    if (method.parameters.isNotEmpty) {
-      for (final parameter in method.parameters) {
+    if (method.formalParameters.isNotEmpty) {
+      for (final parameter in method.formalParameters) {
         if (!parameter.isNamed) {
-          throw UnnamedParameterError(method.name);
+          throw UnnamedParameterError(method.name ?? '');
         }
         _importBuilder.recursionImportsOfDartTypes(type: parameter.type);
 
         if (parameter.isRequired) {
-          parameters += '      required ${parameter.type} ${parameter.name},${ConstString.newline}';
+          parameters += '      required ${parameter.type.getDisplayString()} ${parameter.name},${ConstString.newline}';
         } else {
-          parameters += '      ${parameter.type} ${parameter.name},${ConstString.newline}';
+          parameters += '      ${parameter.type.getDisplayString()} ${parameter.name},${ConstString.newline}';
         }
       }
     }
@@ -117,8 +117,8 @@ class UseCasesGenerator extends GeneratorForAnnotation<DorGenerator> {
 
   String _buildParametersAsArguments(MethodElement method) {
     String parameters = '';
-    if (method.parameters.isNotEmpty) {
-      for (final parameter in method.parameters) {
+    if (method.formalParameters.isNotEmpty) {
+      for (final parameter in method.formalParameters) {
         parameters += '      ${parameter.name}: ${parameter.name},${ConstString.newline}';
       }
     }

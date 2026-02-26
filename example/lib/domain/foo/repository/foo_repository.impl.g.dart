@@ -1,4 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
+
 //
 //**************************************************************************
 //*                                                                        *
@@ -26,14 +28,8 @@ class FooRepositoryImpl implements FooRepository {
   const FooRepositoryImpl(this._dataSource);
 
   @override
-  Future<Thing> doSomething({
-    required String id,
-    required String name,
-  }) async {
-    final resultDto = await _dataSource.doSomething(
-      id: id,
-      name: name,
-    );
+  Future<Thing> doSomething({required String id, required String name}) async {
+    final resultDto = await _dataSource.doSomething(id: id, name: name);
     final result = resultDto.toDomain();
     return result;
   }

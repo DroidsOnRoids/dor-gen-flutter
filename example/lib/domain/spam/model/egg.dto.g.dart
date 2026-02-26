@@ -1,4 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
+
 //
 //**************************************************************************
 //*                                                                        *
@@ -130,40 +132,40 @@ class EggDto {
 
 extension EggDtoToEgg on EggDto {
   Egg toDomain() => Egg(
-        id: id,
-        name: name,
-        description: description,
-        image: image,
-        price: price,
-        weight: weight,
-        category: category,
-        category2: category2,
-        createdAt: createdAt,
-        updatedAt: updatedAt.map((e) => e).toList(growable: false),
-        plant: plant.toDomain(),
-        cats: cats
-            .map((e) => e.map((e) => e?.toDomain()).toList(growable: false))
-            .toList(growable: false),
-        cat: cat?.toDomain(),
-      );
+    id: id,
+    name: name,
+    description: description,
+    image: image,
+    price: price,
+    weight: weight,
+    category: category,
+    category2: category2,
+    createdAt: createdAt,
+    updatedAt: updatedAt.map((e) => e).toList(growable: false),
+    plant: plant.toDomain(),
+    cats: cats
+        .map((e) => e.map((e) => e?.toDomain()).toList(growable: false))
+        .toList(growable: false),
+    cat: cat?.toDomain(),
+  );
 }
 
 extension EggToEggDto on Egg {
   EggDto toDto() => EggDto(
-        id: id,
-        name: name,
-        description: description,
-        image: image,
-        price: price,
-        weight: weight,
-        category: category,
-        category2: category2,
-        createdAt: createdAt,
-        updatedAt: updatedAt.map((e) => e).toList(growable: false),
-        plant: plant.toDto(),
-        cats: cats
-            .map((e) => e.map((e) => e?.toDto()).toList(growable: false))
-            .toList(growable: false),
-        cat: cat?.toDto(),
-      );
+    id: id,
+    name: name,
+    description: description,
+    image: image,
+    price: price,
+    weight: weight,
+    category: category,
+    category2: category2,
+    createdAt: createdAt,
+    updatedAt: updatedAt.map((e) => e).toList(growable: false),
+    plant: plant.toDto(),
+    cats: cats
+        .map((e) => e.map((e) => e?.toDto()).toList(growable: false))
+        .toList(growable: false),
+    cat: cat?.toDto(),
+  );
 }
