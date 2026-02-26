@@ -1,4 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
+
 //
 //**************************************************************************
 //*                                                                        *
@@ -50,16 +52,16 @@ class ThingDto {
 
 extension ThingDtoToThing on ThingDto {
   Thing toDomain() => Thing(
-        id: id,
-        name: name,
-        description: description?.map((e) => e).toList(growable: false),
-      );
+    id: id,
+    name: name,
+    description: description?.map((e) => e).toList(growable: false),
+  );
 }
 
 extension ThingToThingDto on Thing {
   ThingDto toDto() => ThingDto(
-        id: id,
-        name: name,
-        description: description?.map((e) => e).toList(growable: false),
-      );
+    id: id,
+    name: name,
+    description: description?.map((e) => e).toList(growable: false),
+  );
 }

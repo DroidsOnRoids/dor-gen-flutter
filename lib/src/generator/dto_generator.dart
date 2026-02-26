@@ -12,7 +12,7 @@ import 'package:dor_gen/src/utils/field_dto.dart';
 import 'package:dor_gen/src/utils/import_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
-const TypeChecker _dtoConfigChecker = TypeChecker.fromRuntime(DtoConfig);
+const TypeChecker _dtoConfigChecker = TypeChecker.typeNamed(DtoConfig);
 
 class DtoGenerator extends GeneratorForAnnotation<Dto> {
   final ImportBuilder _importBuilder = ImportBuilder();
@@ -28,7 +28,7 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     _importBuilder.addToImports(CodeBuilder.standardIgnore());
     _importBuilder.addToImports('// DTO for ${element.name};');
     _importBuilder.addToImports(CodeBuilder.import('package:json_annotation/json_annotation.dart'));
-    _importBuilder.addToImports(CodeBuilder.import(element.source!.shortName));
+    _importBuilder.addToImports(CodeBuilder.import(element.firstFragment.libraryFragment!.source.shortName));
 
     //build dto class
     final String dtoClassName = CodeBuilder.createDtoClassNameFromClassName(element.name ?? '');
@@ -274,12 +274,14 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     String result = '';
     final function = functionField?.toFunctionValue();
     if (function != null) {
-      if (function.enclosingElement3.name != null) {
-        final enclosingElementSource = function.enclosingElement3.enclosingElement3?.librarySource?.uri.toString();
+      final enclosing = function.enclosingElement;
+      final enclosingName = enclosing?.name;
+      if (enclosingName != null && enclosingName.isNotEmpty) {
+        final enclosingElementSource = enclosing?.enclosingElement?.library?.firstFragment.source.uri.toString();
         if (enclosingElementSource != null) {
           _importBuilder.addToImports(CodeBuilder.import(enclosingElementSource));
         }
-        result += '$fieldName: ${function.enclosingElement3.name}.${function.name},';
+        result += '$fieldName: $enclosingName.${function.name},';
       } else {
         result += '$fieldName: ${function.name},';
       }
@@ -323,7 +325,7 @@ class DtoGenerator extends GeneratorForAnnotation<Dto> {
     } else {
       buffer.writeln('  ${CodeBuilder.createDtoClassNameFromClassName(inputClass.name!)}({');
     }
-    for (final parameter in constructor.parameters) {
+    for (final parameter in constructor.formalParameters) {
       // assume that when class has props field it comes from equatable package
       // TODO(mdembny): add better support for equatable package
       if (parameter.name != 'props') {

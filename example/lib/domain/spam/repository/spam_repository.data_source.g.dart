@@ -1,4 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
+
 //
 //**************************************************************************
 //*                                                                        *
@@ -45,19 +47,13 @@ abstract class SpamRepositoryDataSource {
   });
 
   @POST('/api/v1/spam/setEgg')
-  Future<List<String>> setEgg({
-    required EggDto newEgg,
-  });
+  Future<List<String>> setEgg({required EggDto newEgg});
 
   @POST('/api/v1/spam/setEgg2')
-  Future<void> setEgg2({
-    required EggDto newEgg,
-  });
+  Future<void> setEgg2({required EggDto newEgg});
 
   @POST('/api/v1/spam/setPlant')
-  Future<void> setLotEggs({
-    required List<CatDto> newEggsFuture,
-  });
+  Future<void> setLotEggs({required List<CatDto> newEggsFuture});
 
   @GET('/api/v1/spam/getEgg')
   Future<EggDto> getEgg();

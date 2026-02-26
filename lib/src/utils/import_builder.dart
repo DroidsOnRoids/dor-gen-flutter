@@ -23,7 +23,7 @@ class ImportBuilder {
   }
 
   void addImportsOfDartFunctionTypes({required FunctionType type}) {
-    for (var parameter in type.parameters) {
+    for (var parameter in type.formalParameters) {
       recursionImportsOfDartTypes(type: parameter.type);
     }
     recursionImportsOfDartTypes(type: type.returnType);
@@ -31,8 +31,9 @@ class ImportBuilder {
 
   void _addImportFromType({required DartType type}) {
     if (checkIfIsNotOneOfDartCoreTypes(type)) {
-      if (type.element?.librarySource != null) {
-        String source = CodeBuilder.fromSourceFullNameToPackageImport(type.element!.source!.fullName);
+      final libSource = type.element?.library?.firstFragment.source;
+      if (libSource != null) {
+        String source = CodeBuilder.fromSourceFullNameToPackageImport(libSource.fullName);
         addToImports(CodeBuilder.import(source));
       }
     }
@@ -80,8 +81,9 @@ class ImportBuilder {
 
   void _addImportDtoFromType(DartType type) {
     if (checkIfIsNotOneOfDartCoreTypes(type) && (type.element is! EnumElement)) {
-      if (type.element?.librarySource != null) {
-        String source = CodeBuilder.fromSourceFullNameToPackageDtoImport(type.element!.source!.fullName);
+      final libSource = type.element?.library?.firstFragment.source;
+      if (libSource != null) {
+        String source = CodeBuilder.fromSourceFullNameToPackageDtoImport(libSource.fullName);
         addToImports(CodeBuilder.import(source));
       }
     }
