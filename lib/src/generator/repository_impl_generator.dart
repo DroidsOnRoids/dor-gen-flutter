@@ -8,8 +8,6 @@ import 'package:dor_gen/src/utils/errors.dart';
 import 'package:dor_gen/src/utils/import_builder.dart';
 import 'package:source_gen/source_gen.dart';
 
-const TypeChecker _dorConfigChecker = TypeChecker.fromRuntime(DorConfig);
-
 class RepositoryImplGenerator extends GeneratorForAnnotation<DorGenerator> {
   final ImportBuilder _importBuilder = ImportBuilder();
 
@@ -23,7 +21,7 @@ class RepositoryImplGenerator extends GeneratorForAnnotation<DorGenerator> {
     //primary imports
     _importBuilder.addToImports(CodeBuilder.standardIgnore());
     _importBuilder.addToImports('// Repository implementations for ${element.name};');
-    _importBuilder.addToImports(CodeBuilder.import(element.source!.shortName));
+    _importBuilder.addToImports(CodeBuilder.import(element.firstFragment.libraryFragment!.source.shortName));
     _importBuilder.addToImports(CodeBuilder.import('package:injectable/injectable.dart'));
     _importBuilder.addToImports(CodeBuilder.fromElementToDataSourceImport(element));
 
@@ -74,7 +72,7 @@ class RepositoryImplGenerator extends GeneratorForAnnotation<DorGenerator> {
     buffer.writeln('  @override');
 
     buffer.writeln('  ${method.returnType} ${method.name}(');
-    _buildArguments(buffer: buffer, parameters: method.parameters);
+    _buildArguments(buffer: buffer, parameters: method.formalParameters);
     if (isAsync) {
       buffer.writeln('  ) async {');
     } else {
@@ -101,7 +99,7 @@ class RepositoryImplGenerator extends GeneratorForAnnotation<DorGenerator> {
       buffer.writeln('    final resultDto = _dataSource.${method.name}(');
     }
 
-    for (var parameter in method.parameters) {
+    for (var parameter in method.formalParameters) {
       buffer.writeln('      ${parameter.name}: ${parameter.name}');
       _buildParametersMapping(buffer: buffer, type: parameter.type);
     }
@@ -186,7 +184,7 @@ class RepositoryImplGenerator extends GeneratorForAnnotation<DorGenerator> {
 
   void _buildArguments({
     required StringBuffer buffer,
-    required List<ParameterElement> parameters,
+    required List<FormalParameterElement> parameters,
   }) {
     if (parameters.isNotEmpty) {
       buffer.write('{');
